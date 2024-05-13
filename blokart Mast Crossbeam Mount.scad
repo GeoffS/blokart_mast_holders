@@ -84,6 +84,23 @@ module upperCore()
 
 holderSpacingX = 2*p1.x;
 
+module upperPiece1()
+{
+    difference()
+    {
+        exterior();
+
+        interior();
+
+        // Screw holes:
+        screwHole(   0);
+        screwHole(  holderSpacingX);
+        
+        // Clip wall:
+        tcu([-200, -400, -200], 400);
+    }
+}
+
 module upperPiece2()
 {
     difference()
@@ -95,18 +112,6 @@ module upperPiece2()
                 exterior();
                 translate([holderSpacingX,0,0]) exterior();
             }
-
-            // buttressArm(-holderSpacingX);
-            // buttressArm(  0);
-            // buttressArm( holderSpacingX);
-
-            // hull()
-            // {
-            //     tsp(p1+[-holderSpacingX,0,buttressX], d=d1);
-            //     tsp(p1+[ holderSpacingX,0,buttressX], d=d1);
-            //     tsp(p1+[-holderSpacingX,0,d1/2], d=d1);
-            //     tsp(p1+[ holderSpacingX,0,d1/2], d=d1);
-            // }
         }
 
         interior();
@@ -130,19 +135,6 @@ module upperPiece3()
             translate([-holderSpacingX,0,0]) exterior();
             exterior();
             translate([holderSpacingX,0,0]) exterior();
-
-            // buttressArm(-2*holderSpacingX);
-            // buttressArm(-holderSpacingX);
-            // buttressArm(  0);
-            // buttressArm( holderSpacingX);
-
-            // hull()
-            // {
-            //     tsp(p1+[-2*holderSpacingX,0,buttressX], d=d1);
-            //     tsp(p1+[ holderSpacingX,0,buttressX], d=d1);
-            //     tsp(p1+[-2*holderSpacingX,0,d1/2], d=d1);
-            //     tsp(p1+[ holderSpacingX,0,d1/2], d=d1);
-            // }
         }
         
         translate([-holderSpacingX,0,0]) interior();
@@ -173,21 +165,6 @@ module screwHole(x)
     }
 }
 
-// buttressX = (3 * 25.4) - d1/2;
-// module buttressArm(holderSpacingX)
-// {
-//     d = d1-2*cz;
-//     difference()
-//     {
-//         hull()
-//         {
-//             tsp(p1+[holderSpacingX,0,buttressX], d=d);
-//             tsp(p1+[holderSpacingX,0,d/2], d=d);
-//             tsp(p2+[holderSpacingX,0,frontFittingZ-4], d=d);
-//         }
-//     }
-// }
-
 module clip(d=0)
 {
 	// tcu([-400, -200, -800+frontFittingZ/2], 800);
@@ -195,7 +172,8 @@ module clip(d=0)
 
 if(developmentRender)
 {
-    display() upperPiece2();
+    display() translate([120,0,0]) upperPiece2();
+    upperPiece1();
     display() translate([-200,0,0]) upperPiece3();
 
     displayGhost() mastGhost();
