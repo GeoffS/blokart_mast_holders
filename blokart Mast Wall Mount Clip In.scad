@@ -1,6 +1,6 @@
-include <MakeInclude.scad>
-include <chamferedCylinders.scad>
-use <torus.scad>
+include <../OpenSCADdesigns/MakeInclude.scad>
+include <../OpenSCADdesigns/chamferedCylinders.scad>
+use <../OpenSCADdesigns/torus.scad>
 
 // $fn = 360;
 
