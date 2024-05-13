@@ -2,7 +2,12 @@ include <../OpenSCADdesigns/MakeInclude.scad>
 include <../OpenSCADdesigns/chamferedCylinders.scad>
 use <../OpenSCADdesigns/torus.scad>
 
+makeUpper1 = false;
 makeUpper2 = false;
+makeUpper3 = false;
+makeUpper4 = false;
+
+makeStopper2 = false;
 
 tubeOD = 41+6; // #3 mast section
 belowTubeY = 14;
@@ -126,6 +131,31 @@ module upperPiece2()
     }
 }
 
+module stopper2()
+{
+    difference()
+    {
+        union()
+        {
+            hull()
+            {
+                exterior();
+                translate([holderSpacingX,0,0]) exterior();
+            }
+        }
+
+        // interior();
+        // translate([holderSpacingX,0,0]) interior();
+
+        // Screw holes:
+        screwHole(   0);
+        screwHole(  holderSpacingX);
+        
+        // Clip wall:
+        tcu([-200, -400, -200], 400);
+    }
+}
+
 module upperPiece3()
 {
     difference()
@@ -142,6 +172,34 @@ module upperPiece3()
         translate([holderSpacingX,0,0]) interior();
 
         // Screw holes:
+        screwHole( -holderSpacingX);
+        screwHole(   0);
+        screwHole(  holderSpacingX);
+        
+        // Clip wall:
+        tcu([-200, -400, -200], 400);
+    }
+}
+
+module upperPiece4()
+{
+    difference()
+    {
+        hull()
+        {
+            translate([-2*holderSpacingX,0,0]) exterior();
+            translate([-holderSpacingX,0,0]) exterior();
+            exterior();
+            translate([holderSpacingX,0,0]) exterior();
+        }
+        
+        translate([-2*holderSpacingX,0,0]) interior();
+        translate([-holderSpacingX,0,0]) interior();
+        interior();
+        translate([holderSpacingX,0,0]) interior();
+
+        // Screw holes:
+        screwHole( -2*holderSpacingX);
         screwHole( -holderSpacingX);
         screwHole(   0);
         screwHole(  holderSpacingX);
@@ -172,15 +230,22 @@ module clip(d=0)
 
 if(developmentRender)
 {
-    display() translate([120,0,0]) upperPiece2();
-    upperPiece1();
-    display() translate([-200,0,0]) upperPiece3();
+    display() translate([340,0,0]) upperPiece1();
+    display() translate([170,0,0]) upperPiece2();
+    display() translate([170,0,-100]) stopper2();
+    upperPiece4();
+    display() translate([-320,0,0]) upperPiece3();
 
     displayGhost() mastGhost();
 }
 else
 {
+    if(makeUpper1) rotate([0,0,180]) upperPiece2();
     if(makeUpper2) rotate([0,0,180]) upperPiece2();
+    if(makeUpper3) rotate([0,0,180]) upperPiece2();
+    if(makeUpper4) rotate([0,0,180]) upperPiece2();
+    
+    if(makeStopper2) rotate([0,0,180]) stopper2();
 }
 
 module mastGhost()
