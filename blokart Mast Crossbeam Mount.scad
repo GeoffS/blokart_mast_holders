@@ -5,16 +5,16 @@ use <../OpenSCADdesigns/torus.scad>
 makeUpper2 = false;
 
 tubeOD = 41+6; // #3 mast section
-belowTubeY = 9;
+belowTubeY = 14;
 
 wallFitttingZ = 40;
 frontFittingZ = 40;
-cz=3;
+cz=4;
 
-tubeCtrY = belowTubeY+tubeOD/2;
+tubeCtrY = belowTubeY + tubeOD/2;
 
 d1 = 12;
-p1 = [tubeOD/2+d1/2,0,0];
+p1 = [tubeOD/2+d1/2+6, 0, 0];
 
 p2 = [p1.x, tubeCtrY+d1/2, 0];
 p3 = [p1.x, tubeCtrY-d1/2+cz, 0];
@@ -83,27 +83,34 @@ module upperCore()
 }
 
 holderSpacingX = 2*p1.x;
+
 module upperPiece2()
 {
     difference()
     {
         union()
         {
-            upperCore();
-            translate([holderSpacingX,0,0]) upperCore();
-
-            buttressArm(-holderSpacingX);
-            buttressArm(  0);
-            buttressArm( holderSpacingX);
-
             hull()
             {
-                tsp(p1+[-holderSpacingX,0,buttressX], d=d1);
-                tsp(p1+[ holderSpacingX,0,buttressX], d=d1);
-                tsp(p1+[-holderSpacingX,0,d1/2], d=d1);
-                tsp(p1+[ holderSpacingX,0,d1/2], d=d1);
+                exterior();
+                translate([holderSpacingX,0,0]) exterior();
             }
+
+            // buttressArm(-holderSpacingX);
+            // buttressArm(  0);
+            // buttressArm( holderSpacingX);
+
+            // hull()
+            // {
+            //     tsp(p1+[-holderSpacingX,0,buttressX], d=d1);
+            //     tsp(p1+[ holderSpacingX,0,buttressX], d=d1);
+            //     tsp(p1+[-holderSpacingX,0,d1/2], d=d1);
+            //     tsp(p1+[ holderSpacingX,0,d1/2], d=d1);
+            // }
         }
+
+        interior();
+        translate([holderSpacingX,0,0]) interior();
 
         // Screw holes:
         screwHole(   0);
@@ -118,25 +125,29 @@ module upperPiece3()
 {
     difference()
     {
-        union()
+        hull()
         {
-            translate([-holderSpacingX,0,0]) upperCore();
-            upperCore();
-            translate([holderSpacingX,0,0]) upperCore();
+            translate([-holderSpacingX,0,0]) exterior();
+            exterior();
+            translate([holderSpacingX,0,0]) exterior();
 
-            buttressArm(-2*holderSpacingX);
-            buttressArm(-holderSpacingX);
-            buttressArm(  0);
-            buttressArm( holderSpacingX);
+            // buttressArm(-2*holderSpacingX);
+            // buttressArm(-holderSpacingX);
+            // buttressArm(  0);
+            // buttressArm( holderSpacingX);
 
-            hull()
-            {
-                tsp(p1+[-2*holderSpacingX,0,buttressX], d=d1);
-                tsp(p1+[ holderSpacingX,0,buttressX], d=d1);
-                tsp(p1+[-2*holderSpacingX,0,d1/2], d=d1);
-                tsp(p1+[ holderSpacingX,0,d1/2], d=d1);
-            }
+            // hull()
+            // {
+            //     tsp(p1+[-2*holderSpacingX,0,buttressX], d=d1);
+            //     tsp(p1+[ holderSpacingX,0,buttressX], d=d1);
+            //     tsp(p1+[-2*holderSpacingX,0,d1/2], d=d1);
+            //     tsp(p1+[ holderSpacingX,0,d1/2], d=d1);
+            // }
         }
+        
+        translate([-holderSpacingX,0,0]) interior();
+        interior();
+        translate([holderSpacingX,0,0]) interior();
 
         // Screw holes:
         screwHole( -holderSpacingX);
@@ -148,42 +159,44 @@ module upperPiece3()
     }
 }
 
+screwdriverHoleDia = 10.5;
+
 module screwHole(x)
 {
-    screwCleanceHoleDia = 3.7; // #6 sheet-metal screw
+    screwCleanceHoleDia = 4.4; // #8 sheet-metal screw
     chamferZ = -d1/2-5+screwCleanceHoleDia/2 + 2.5;
-    translate([x,0,frontFittingZ+7]) rotate([90,0,0])
+    translate([x,0,frontFittingZ/2]) rotate([90,0,0])
     {
         tcy([0,0,-50], d=screwCleanceHoleDia, h=100);
-        translate([0,0,chamferZ])
-            cylinder(d1=10, d2=0, h=5);
+        translate([0,0,chamferZ]) cylinder(d1=screwdriverHoleDia, d2=0, h=screwdriverHoleDia/2);
+        tcy([0,0,chamferZ-200+nothing], d=screwdriverHoleDia, h=200);
     }
 }
 
-buttressX = (3 * 25.4) - d1/2;
-module buttressArm(holderSpacingX)
-{
-    d = d1-2*cz;
-    difference()
-    {
-        hull()
-        {
-            tsp(p1+[holderSpacingX,0,buttressX], d=d);
-            tsp(p1+[holderSpacingX,0,d/2], d=d);
-            tsp(p2+[holderSpacingX,0,frontFittingZ-4], d=d);
-        }
-    }
-}
+// buttressX = (3 * 25.4) - d1/2;
+// module buttressArm(holderSpacingX)
+// {
+//     d = d1-2*cz;
+//     difference()
+//     {
+//         hull()
+//         {
+//             tsp(p1+[holderSpacingX,0,buttressX], d=d);
+//             tsp(p1+[holderSpacingX,0,d/2], d=d);
+//             tsp(p2+[holderSpacingX,0,frontFittingZ-4], d=d);
+//         }
+//     }
+// }
 
 module clip(d=0)
 {
-	
+	// tcu([-400, -200, -800+frontFittingZ/2], 800);
 }
 
 if(developmentRender)
 {
     display() upperPiece2();
-    display() translate([-150,0,0]) upperPiece3();
+    display() translate([-200,0,0]) upperPiece3();
 
     displayGhost() mastGhost();
 }
