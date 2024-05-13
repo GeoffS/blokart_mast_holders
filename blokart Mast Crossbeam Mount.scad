@@ -4,11 +4,11 @@ use <../OpenSCADdesigns/torus.scad>
 
 makeUpper2 = false;
 
-tubeOD = 41+4; // #3 mast section
+tubeOD = 41+6; // #3 mast section
 belowTubeY = 9;
 
-wallFitttingZ = 21;
-frontFittingZ = 21;
+wallFitttingZ = 40;
+frontFittingZ = 40;
 cz=3;
 
 tubeCtrY = belowTubeY+tubeOD/2;
@@ -58,7 +58,7 @@ interior_cz = cz + interior_dh;
 module interior_tcy(t, d)
 {
     translate(t+[0,0,cz-nothing])
-        cylinder(d=d, h=wallFitttingZ-2*cz+2*nothing);
+        cylinder(d=d, h=200); //wallFitttingZ-2*cz+2*nothing);
 }
 
 module interior_tChamferBottom(t, d)
@@ -106,10 +106,8 @@ module upperPiece2()
         }
 
         // Screw holes:
-        screwHole( -holderSpacingX);
         screwHole(   0);
         screwHole(  holderSpacingX);
-        screwHole(2*holderSpacingX);
         
         // Clip wall:
         tcu([-200, -400, -200], 400);
@@ -144,7 +142,6 @@ module upperPiece3()
         screwHole( -holderSpacingX);
         screwHole(   0);
         screwHole(  holderSpacingX);
-        screwHole(2*holderSpacingX);
         
         // Clip wall:
         tcu([-200, -400, -200], 400);
@@ -163,7 +160,7 @@ module screwHole(x)
     }
 }
 
-buttressX = 50;
+buttressX = (3 * 25.4) - d1/2;
 module buttressArm(holderSpacingX)
 {
     d = d1-2*cz;
@@ -176,7 +173,6 @@ module buttressArm(holderSpacingX)
             tsp(p2+[holderSpacingX,0,frontFittingZ-4], d=d);
         }
     }
-    
 }
 
 module clip(d=0)
@@ -187,6 +183,7 @@ module clip(d=0)
 if(developmentRender)
 {
     display() upperPiece2();
+    display() translate([-150,0,0]) upperPiece3();
 
     displayGhost() mastGhost();
 }
