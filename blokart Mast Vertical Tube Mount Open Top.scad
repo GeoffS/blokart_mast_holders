@@ -9,7 +9,7 @@ supportTubeOD = 43.6;
 mastTubeOD = 41+4; // #3 mast section
 belowMastTubeY = 9;
 
-wallFitttingZ = 35;
+wallFitttingZ = 30;
 frontFittingZ = wallFitttingZ;
 wallFittingCZ=3;
 
