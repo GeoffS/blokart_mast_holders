@@ -11,7 +11,7 @@ belowMastTubeY = 9;
 
 wallFitttingZ = 40;
 frontFittingZ = wallFitttingZ;
-cz=3;
+wallFittingCZ=3;
 
 tubeCtrY1 = belowMastTubeY + mastTubeOD/2 + 9;
 tubeCtrY2 = belowMastTubeY + mastTubeOD/2;
@@ -20,35 +20,38 @@ d1 = 12;
 p1 = [mastTubeOD/2+d1/2,0,0];
 
 p2 = [p1.x, tubeCtrY1+d1/2, 0];
-p3 = [p1.x, tubeCtrY1-d1/2+cz, 0];
+p3 = [p1.x, tubeCtrY1-d1/2+wallFittingCZ, 0];
 p4 = [p1.x, belowMastTubeY, 0];
 p5 = p4+[0,12,0];
 
 topCtrX = 22;
+
+extDia = mastTubeOD + 2*d1;
+
 module exterior()
 {
-    d = mastTubeOD + 2*d1;
+    
     hull()
     {
         tsccde(
             t = [0,tubeCtrY1,0],
-            d = d
+            d = extDia
         );
         tsccde(
             t = [topCtrX,14,0],
-            d = d
+            d = extDia
         );
         tsccde(
             t = [topCtrX,-30,0],
-            d = d
+            d = extDia
         );
         tsccde(
             t = [-25,0,0],
-            d = d
+            d = extDia
         );
         tsccde(
             t = [-7,tubeCtrY1,0],
-            d = d
+            d = extDia
         );
     }
 
@@ -58,6 +61,30 @@ module exterior()
 module bungieClip()
 {
     
+    d = 8;
+    cz = 2;
+    ctrZ = wallFitttingZ/2;
+    
+    translate([-7,tubeCtrY1,0]) rotate([0,0,137]) translate([extDia/2-d/2, 0, ctrZ]) rotate([0,0,20])
+    {
+        x = 11;
+        z2 = 15;
+        z1 = z2 + 2*x; //wallFitttingZ - 2*wallFittingCZ;
+        difference()
+        {
+            hull()
+            {
+                translate([0, 0, -z1/2]) simpleChamferedCylinderDoubleEnded1(d=d, h=z1, cz=cz);
+                translate([x, 0, -z2/2]) simpleChamferedCylinderDoubleEnded1(d=d, h=z2, cz=cz);
+            }
+
+            // rotate([90,0,0]) hull()
+            // {
+            //     tcy([-5,0,-15], d=3.2, h=30);
+            //     tcy([20,0,-15], d=3.2, h=30);
+            // }
+        }
+    }
 }
 
 clipAngle = -55;
@@ -148,15 +175,15 @@ module tsccde(t, d)
         simpleChamferedCylinderDoubleEnded(
             d, 
             h=frontFittingZ, 
-            cz=cz);
+            cz=wallFittingCZ);
 }
 
 interior_dh = 1;
-interior_cz = cz + interior_dh;
+interior_cz = wallFittingCZ + interior_dh;
 module interior_tcy(t, d)
 {
-    translate(t+[0,0,cz-nothing])
-        cylinder(d=d, h=wallFitttingZ-2*cz+2*nothing);
+    translate(t+[0,0,wallFittingCZ-nothing])
+        cylinder(d=d, h=wallFitttingZ-2*wallFittingCZ+2*nothing);
 }
 
 module interior_tChamferBottom(t, d)
@@ -167,7 +194,7 @@ module interior_tChamferBottom(t, d)
 
 module interior_tChamferTop(t, d)
 {
-    translate(t+[0,0,wallFitttingZ-cz])
+    translate(t+[0,0,wallFitttingZ-wallFittingCZ])
         cylinder(d2=d+2*interior_cz, d1=d, h=interior_cz);
 }
 
