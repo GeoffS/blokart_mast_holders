@@ -196,11 +196,7 @@ module mount1()
         screwHole(  0);
         screwHole(-49);
         
-        // Clip wall:
-        // tcu([-200, -400, -200], 400);
-        
         // Clip support tube:
-
         translate([0, -supportTubeOD/2 ,wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
         tcu([-200, -400-supportTubeOD/2, -200], 400);
     }
