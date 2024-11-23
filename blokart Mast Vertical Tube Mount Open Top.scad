@@ -3,6 +3,7 @@ include <../OpenSCADdesigns/chamferedCylinders.scad>
 use <../OpenSCADdesigns/torus.scad>
 
 makeMount1 = false;
+makeBungieRetainer = false;
 
 supportTubeOD = 43.6;
 
@@ -268,6 +269,11 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
     }
 }
 
+module bungieRetainer()
+{
+
+}
+
 module clip(d=0)
 {
 	// tcu([-200, -200, wallFitttingZ/2-d], 400);
@@ -275,12 +281,14 @@ module clip(d=0)
 
 if(developmentRender)
 {
-	display() mount1();
+	// display() mount1();
+    // displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
+    // displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
 
-    displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
-    displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
+    display() bungieRetainer();
 }
 else
 {
     if(makeMount1) rotate([0,0,180]) mount1();
+    if(makeBungieRetainer) rotate([0,0,180]) bungieRetainer();
 }
