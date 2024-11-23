@@ -51,6 +51,13 @@ module exterior()
             d = d
         );
     }
+
+    bungieClip();
+}
+
+module bungieClip()
+{
+    
 }
 
 clipAngle = -55;
