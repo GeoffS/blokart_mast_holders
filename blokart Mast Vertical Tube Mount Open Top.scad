@@ -3,30 +3,31 @@ include <../OpenSCADdesigns/chamferedCylinders.scad>
 use <../OpenSCADdesigns/torus.scad>
 
 makeMount1 = false;
-makeEndStop = false;
 
-tubeOD = 41+4; // #3 mast section
-belowTubeY = 9;
+
+
+mastTubeOD = 41+4; // #3 mast section
+belowMastTubeY = 9;
 
 wallFitttingZ = 40;
 frontFittingZ = wallFitttingZ;
 cz=3;
 
-tubeCtrY1 = belowTubeY + tubeOD/2 + 9;
-tubeCtrY2 = belowTubeY + tubeOD/2;
+tubeCtrY1 = belowMastTubeY + mastTubeOD/2 + 9;
+tubeCtrY2 = belowMastTubeY + mastTubeOD/2;
 
 d1 = 12;
-p1 = [tubeOD/2+d1/2,0,0];
+p1 = [mastTubeOD/2+d1/2,0,0];
 
 p2 = [p1.x, tubeCtrY1+d1/2, 0];
 p3 = [p1.x, tubeCtrY1-d1/2+cz, 0];
-p4 = [p1.x, belowTubeY, 0];
+p4 = [p1.x, belowMastTubeY, 0];
 p5 = p4+[0,12,0];
 
 topCtrX = 22;
 module exterior()
 {
-    d = tubeOD + 2*d1;
+    d = mastTubeOD + 2*d1;
     hull()
     {
         tsccde(
@@ -64,7 +65,7 @@ module clipRemoval1()
 module clipEnd(mx)
 {
     d1p = d1;
-    ty = tubeOD/2 + d1/2;
+    ty = mastTubeOD/2 + d1/2;
     mirror([mx,0,0]) 
         translate([0,tubeCtrY1,0]) 
             rotate([0,0,clipAngle])
@@ -118,7 +119,7 @@ module interior2()
 
 module interiorPiece(centers)
 {
-    d = tubeOD;
+    d = mastTubeOD;
 
     hull() for(p = centers)
     {
