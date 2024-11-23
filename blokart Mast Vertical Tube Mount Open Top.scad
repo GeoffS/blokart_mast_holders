@@ -193,12 +193,20 @@ module mount1()
 
         // Screw holes:
         screwHole( 45, screwHeadClearanceDia=9);
-        screwHole(  0);
+        // screwHole(  0);
         screwHole(-49);
         
         // Clip support tube:
-        translate([0, -supportTubeOD/2 ,wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
+        translate([0, -supportTubeOD/2, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
         tcu([-200, -400-supportTubeOD/2, -200], 400);
+
+        // Bungie hole:
+        bungieHoleDia = 5;
+        translate([-31.9, 45, wallFitttingZ/2]) 
+        {
+            tcy([0, 0,-100], d=bungieHoleDia, h=200);
+            doubleZ() translate([0, 0, wallFitttingZ/2-bungieHoleDia/2-3.5]) cylinder(d1=0, d2=20, h=10);
+        }
     }
 }
 
@@ -224,7 +232,7 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
 
 module clip(d=0)
 {
-	
+	// tcu([-200, -200, wallFitttingZ/2-d], 400);
 }
 
 if(developmentRender)
