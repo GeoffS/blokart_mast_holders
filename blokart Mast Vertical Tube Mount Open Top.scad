@@ -9,7 +9,7 @@ supportTubeOD = 43.6;
 mastTubeOD = 41+4; // #3 mast section
 belowMastTubeY = 9;
 
-wallFitttingZ = 40;
+wallFitttingZ = 35;
 frontFittingZ = wallFitttingZ;
 wallFittingCZ=3;
 
@@ -65,17 +65,21 @@ module bungieClip()
     cz = 2;
     ctrZ = wallFitttingZ/2;
     
-    translate([-7,tubeCtrY1,0]) rotate([0,0,137]) translate([extDia/2-d/2, 0, ctrZ]) rotate([0,0,20])
+    // MAGIC NUMBER: 1.055 depends on 137 degree angle
+    translate([-7,tubeCtrY1,0]) rotate([0,0,139]) translate([extDia/2-d/2-1.055, 0, ctrZ]) rotate([0,0,10])
     {
         x = 11;
-        z2 = 15;
-        z1 = z2 + 2*x; //wallFitttingZ - 2*wallFittingCZ;
+        // z2 = 15;
+        // z1 = z2 + 2*x;
+        // MAGIC NUMBER: -0.1, depends on 1.055 above
+        z1 = wallFitttingZ - 0.1;
+        z2 = z1 - 2*x;
         difference()
         {
             hull()
             {
-                translate([0, 0, -z1/2]) simpleChamferedCylinderDoubleEnded1(d=d, h=z1, cz=cz);
-                translate([x, 0, -z2/2]) simpleChamferedCylinderDoubleEnded1(d=d, h=z2, cz=cz);
+                #translate([0, 0, -z1/2]) simpleChamferedCylinderDoubleEnded(d=d, h=z1, cz=cz);
+                translate([x, 0, -z2/2]) simpleChamferedCylinderDoubleEnded(d=d, h=z2, cz=cz);
             }
 
             // rotate([90,0,0]) hull()
