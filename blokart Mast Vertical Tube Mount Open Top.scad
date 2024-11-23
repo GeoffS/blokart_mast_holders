@@ -220,81 +220,19 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
     }
 }
 
-endStopChamferZ = 6;
-endStopDia1 = 50 + endStopChamferZ;
-endStopDia2 = endStopDia1 + 10;
-module endStop()
+module clip(d=0)
 {
-    difference()
-    {
-        hull()
-        {
-            endStopDisk1(-20, endStopDia2);
-            endStopDisk1(tubeCtrY1+3, endStopDia1);
-
-            endStopBody1(-20, 20, endStopDia2);
-            endStopBody1(tubeCtrY1+3, 10, endStopDia1);
-
-            tsp([0,0,-50], d=40);
-        }
-
-        // Clip wall:
-        tcu([-100, -200, -190], 200);
-
-        screwHole(0, z=-30);
-    }
-    
-}
-
-module endStopDisk1(y, d)
-{
-    translate([0, y, -endStopChamferZ])
-        cylinder(
-            d1=d, 
-            d2=d-endStopChamferZ, 
-            h=endStopChamferZ);
-}
-
-module endStopBody1(y, z, d)
-{
-    translate([0, y, -z-endStopChamferZ])
-    {
-        cylinder(
-            d=d, 
-            h=z);
-
-        translate([0, 0, 0]) difference()
-        {
-            sphere(d=d);
-            tcu([-100, -100, 0], 200);
-        }
-    }
-}
-
-module clip()
-{
-	// tcu([-200, -200, frontFittingZ/2], 400);
-    // tcu([-200, -200, frontFittingZ/2], 400);
-    // tcu([-400, -200, -10], 400);
+	
 }
 
 if(developmentRender)
 {
-	difference()
-	{
-        union()
-        {
-            translate([0,0,100]) mount1();
-            endStop();
-        }
+	display() mount1();
 
-		clip();
-	}
-    %tcy([25,tubeCtrY2-2,0], d=41, h=200);
-    %tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
+    displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
+    displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
 }
 else
 {
     if(makeMount1) rotate([0,0,180]) mount1();
-    if(makeEndStop) rotate([0,180,0]) endStop();
 }
