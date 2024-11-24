@@ -10,7 +10,7 @@ supportTubeOD = 43.6;
 mastTubeOD = 41+4; // #3 mast section
 belowMastTubeY = 9;
 
-wallFitttingZ = 30;
+wallFitttingZ = 35;
 frontFittingZ = wallFitttingZ;
 wallFittingCZ=3;
 
@@ -247,8 +247,9 @@ module mount1()
         screwHole(-49);
         
         // Clip support tube:
-        translate([0, -supportTubeOD/2, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
-        tcu([-200, -400-supportTubeOD/2, -200], 400);
+        supportTubeOffsetY = -supportTubeOD/2-4;
+        translate([0, supportTubeOffsetY, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
+        tcu([-200, -400+supportTubeOffsetY, -200], 400);
 
         // Bungie hole:
         // MAGIC NUMBERS: x, y below
@@ -279,7 +280,6 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
         }
     }
 }
-
 
 retainerBungieHoleDia = 3.5;
 
