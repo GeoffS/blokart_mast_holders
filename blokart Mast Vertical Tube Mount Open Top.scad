@@ -253,7 +253,7 @@ module mount1()
 
         // Bungie hole:
         // MAGIC NUMBERS: x, y below
-        translate([-33.5, 31, wallFitttingZ/2]) 
+        translate([-33.5, 22, wallFitttingZ/2]) 
         {
             tcy([0, 0,-100], d=mountBungieHoleDia, h=200);
             doubleZ() translate([0, 0, wallFitttingZ/2-mountBungieHoleDia/2-3]) cylinder(d1=0, d2=20, h=10);
