@@ -197,7 +197,7 @@ module upperCore()
 }
 
 holderSpacingX = -p1.x;
-bungieHoleDia = 4;
+mountBungieHoleDia = 5;
 
 module mount1()
 {
@@ -225,8 +225,8 @@ module mount1()
         // Bungie hole:
         translate([-31.9, 45, wallFitttingZ/2]) 
         {
-            tcy([0, 0,-100], d=bungieHoleDia, h=200);
-            doubleZ() translate([0, 0, wallFitttingZ/2-bungieHoleDia/2-3.5]) cylinder(d1=0, d2=20, h=10);
+            tcy([0, 0,-100], d=mountBungieHoleDia, h=200);
+            doubleZ() translate([0, 0, wallFitttingZ/2-mountBungieHoleDia/2-3.5]) cylinder(d1=0, d2=20, h=10);
         }
     }
 }
@@ -251,19 +251,23 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
     }
 }
 
+
+retainerBungieHoleDia = 3.5;
+
 module bungieRetainer()
 {
-    cz = 3;
+    // MAGIC NUMBER: 3.37 matches the chamfers on the body octagons.
+    cz = 3.37;
 
-    x1 = frontFittingZ + 2*cz + 2*bungieHoleDia + 4;
+    x1 = frontFittingZ + 2*cz + 2*retainerBungieHoleDia + 0.5;
     x2 = frontFittingZ;
     x3 = 15;
     y = 15;
 
-    d = bungieHoleDia + 6;
+    d = retainerBungieHoleDia + 8;
     z = d * cos(22.5);
 
-    bungieHoleCtrOffsetX = frontFittingZ/2 + 1 + bungieHoleDia/2;
+    bungieHoleCtrOffsetX = frontFittingZ/2 -0.5 + retainerBungieHoleDia/2;
 
     difference()
     {
@@ -274,14 +278,17 @@ module bungieRetainer()
             // Front extension to fit into the 90 degree bungie-clip:
             difference()
             {
-                // MAGIC NUMBER: 13.06555, should be calc. from d
-                translate([0,0,0]) rotate([0,90,0]) tcy([0,0,-frontFittingZ/2], d=13.06555, h=frontFittingZ, $fn=4);
+                // MAGIC NUMBER: 15.0255, should be calc. from d
+                frontZ = frontFittingZ - 1;
+                translate([0,0,0]) rotate([0,90,0]) tcy([0,0,-frontZ/2], d=15.0255, h=frontZ, $fn=4);
                 // Trim back:
                 tcu([-200,0,-200], 400);
                 // Trim top and bottom:
                 doubleZ() tcu([-200, -200, z/2], 400);
                 // Clip the front point:
-                tcu([-200,-400-7,-200], 400);
+                tcu([-200,-400-7.3,-200], 400);
+                // Angle the ends slightly:
+                doubleX() translate([frontZ/2,-z/2,0]) rotate([0,0,-30]) tcu([0,-10,-10], 20);
             }
 
             hull()
@@ -292,10 +299,12 @@ module bungieRetainer()
         }
 
         // Bungie holes:
-        doubleX() translate([bungieHoleCtrOffsetX,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=bungieHoleDia, h=100);
+        doubleX() translate([bungieHoleCtrOffsetX,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=retainerBungieHoleDia, h=100);
 
         // Finger grips:
-        doubleZ() translate([0, y-4, z/2-4]) cylinder(d1=0, d2=20, h=10);
+        yf = y-4.5;
+        doubleZ() translate([0, yf, z/2-6]) cylinder(d1=0, d2=20, h=10);
+        tcy([0,yf,-50], d=8, h=100);
     }
 }
 
