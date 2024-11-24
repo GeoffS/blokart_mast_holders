@@ -29,14 +29,15 @@ p5 = p4+[0,12,0];
 topCtrX = 22;
 
 extDia = mastTubeOD + 2*d1;
+extDia2 = mastTubeOD + 10;
 
-module exterior()
+module exterior1()
 {
-    exteriorCore();
+    exteriorCore1();
     bungieClip();
 }
 
-module exteriorCore()
+module exteriorCore1()
 {
     hull()
     {
@@ -59,6 +60,41 @@ module exteriorCore()
         tsccde(
             t = [-7,tubeCtrY1,0],
             d = extDia
+        );
+    }
+}
+
+module exterior2()
+{
+    exteriorCore2();
+}
+
+module exteriorCore2()
+{
+    hull()
+    {
+        difference()
+        {
+            union()
+            {
+                tsccde(
+                    t = [topCtrX,14,0],
+                    d = extDia
+                );
+                tsccde(
+                    t = [topCtrX,-30,0],
+                    d = extDia
+                );
+            }
+            tcu([topCtrX-400,-180,-170], 400);
+        }
+        tsccde(
+            t = [-25,0,0],
+            d = extDia
+        );
+        tsccde(
+            t = [0,tubeCtrY1,0],
+            d = extDia2
         );
     }
 }
@@ -94,7 +130,7 @@ module bungieClipCore()
     hull()
     {
         bungieClipProtrusion();
-        exteriorCore();
+        exteriorCore1();
     }
     // Block to help adjust the final angle (above 9 degrees)
     // %protrusionEndXform() tcu([-3.6, -20,-20], [10, 40, 40]);
@@ -132,7 +168,7 @@ module clipEnd(mx)
                     d = d1p);
 }
 
-module interior1()
+module interior1a()
 {
     interiorPiece([[0, tubeCtrY1, 0]]);
 
@@ -151,7 +187,7 @@ module interior1()
     }
 }
 
-module interior2()
+module interior1b()
 {
     difference()
     {
@@ -162,6 +198,18 @@ module interior2()
         ]);
 
         tcu([0, tubeCtrY1, -200], 400);
+    }
+}
+
+module interior2a()
+{
+    difference() 
+    {
+        interiorPiece([
+            [  0, tubeCtrY2, 0],
+            [100, tubeCtrY2, 0],
+        ]);
+        tcu([-400+40,-200,-200], 400);
     }
 }
 
@@ -212,16 +260,25 @@ module interior_tChamferTop(t, d)
         cylinder(d2=d+2*interior_cz, d1=d, h=interior_cz);
 }
 
-module upperCore()
+module upperCore1()
 {
     difference()
     {
-        exterior();
+        exterior1();
         clipRemoval1();
-        interior1();
-        interior2();
+        interior1a();
+        interior1b();
     }
     clipEnd(0);
+}
+
+module upperCore2()
+{
+    difference()
+    {
+        exterior2();
+        interior2a();
+    }
 }
 
 holderSpacingX = -p1.x;
@@ -231,33 +288,14 @@ module mount1()
 {
     difference()
     {
-        upperCore();
+        upperCore1();
 
         // Trim the bit of excess that didn't get taken care of...
         tcy([42,42,-100], d=10, h=200);
 
-        // Chamfer top:
-        translate([topCtrX+37.5,0,0]) //[37.5,0,0])
-            rotate([0,0,45])
-                tcu([0, -5, -100], [30, 30, 200]);
-
-        // Screw holes:
-        screwHole( 45, screwHeadClearanceDia=9);
-        // screwHole(  0);
-        screwHole(-49);
         
-        // Clip support tube:
-        supportTubeOffsetY = -supportTubeOD/2-4;
-        translate([0, supportTubeOffsetY, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
-        tcu([-200, -400+supportTubeOffsetY, -200], 400);
 
-        // Bungie hole:
-        // MAGIC NUMBERS: x, y below
-        translate([-33.5, 22, wallFitttingZ/2]) 
-        {
-            tcy([0, 0,-100], d=mountBungieHoleDia, h=200);
-            doubleZ() translate([0, 0, wallFitttingZ/2-mountBungieHoleDia/2-3]) cylinder(d1=0, d2=20, h=10);
-        }
+        commonExteriorTrimming();
     }
 }
 
@@ -265,26 +303,31 @@ module mount2()
 {
     difference()
     {
-        upperCore();
+        upperCore2();
 
         // Trim the bit of excess that didn't get taken care of...
         tcy([42,42,-100], d=10, h=200);
 
-        // Chamfer top:
-        translate([topCtrX+37.5,0,0]) //[37.5,0,0])
-            rotate([0,0,45])
-                tcu([0, -5, -100], [30, 30, 200]);
-
-        // Screw holes:
-        screwHole( 45, screwHeadClearanceDia=9);
-        // screwHole(  0);
-        screwHole(-49);
-        
-        // Clip support tube:
-        supportTubeOffsetY = -supportTubeOD/2-4;
-        translate([0, supportTubeOffsetY, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
-        tcu([-200, -400+supportTubeOffsetY, -200], 400);
+        commonExteriorTrimming();
     }
+}
+
+module commonExteriorTrimming()
+{
+    // Chamfer top:
+    translate([topCtrX+37.5,0,0]) //[37.5,0,0])
+        rotate([0,0,45])
+            tcu([0, -5, -100], [30, 30, 200]);
+
+    // Screw holes:
+    screwHole( 45, screwHeadClearanceDia=9);
+    // screwHole(  0);
+    screwHole(-49);
+    
+    // Clip support tube:
+    supportTubeOffsetY = -supportTubeOD/2-4;
+    translate([0, supportTubeOffsetY, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
+    tcu([-200, -400+supportTubeOffsetY, -200], 400);
 }
 
 module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
@@ -376,6 +419,7 @@ if(developmentRender)
     display() mount2();
     oXY = 1.4;
     displayGhost() tcy([-oXY,tubeCtrY2-oXY,0], d=41, h=200);
+    displayGhost() translate([150, 0,0]) mount1();
 
 	// display() mount1();
     // displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
