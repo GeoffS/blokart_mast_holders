@@ -59,28 +59,34 @@ module exterior()
     bungieClip();
 }
 
+bungieClipDia = 10;
+bungieClipCZ = wallFittingCZ;
+bungieClipCtrZ = wallFitttingZ/2;
+bungieClipZ = wallFitttingZ;
+
 module bungieClip()
 {
     
-    d = 10;
-    cz = wallFittingCZ;
-    ctrZ = wallFitttingZ/2;
-    
-    // MAGIC NUMBER: 1.055 depends on 137 degree angle
-    translate([-7,tubeCtrY1,0]) rotate([0,0,140]) translate([extDia/2-d/2-1.055, 0, ctrZ]) rotate([0,0,16])
+    translate([-7,tubeCtrY1,0])
     {
         x = 10.7;
-        // MAGIC NUMBER: -0.1, depends on 1.055 above
-        z1 = wallFitttingZ; // - 0.1;
-        z2 = z1; //z1 - 2*x;
+        protrusionAngle = 16;
         hull()
         {
-            translate([0, 0, -z1/2]) simpleChamferedCylinderDoubleEnded(d=d, h=z1, cz=cz);
-            translate([x, 0, -z2/2]) simpleChamferedCylinderDoubleEnded(d=d, h=z2, cz=cz);
+            protrusionXform() simpleChamferedCylinderDoubleEnded(d=bungieClipDia, h=bungieClipZ, cz=bungieClipCZ);
+            protrusionXform() rotate([0,0,protrusionAngle]) translate([x, 0, 0]) simpleChamferedCylinderDoubleEnded(d=bungieClipDia, h=bungieClipZ, cz=bungieClipCZ);
+            // MAGIC NUMBER: 1.0 depends on 100 degree andgle and other protrusion params
+            protrusionXform(100) translate([1.0,0,0]) simpleChamferedCylinderDoubleEnded(d=bungieClipDia, h=bungieClipZ, cz=bungieClipCZ);
         }
         // Block to help adjust the final angle (above 9 degrees)
-        %tcu([7, -20,-20], [10, 40, 40]);
+        // %protrusionXform() rotate([0,0,protrusionAngle]) tcu([7, -20,-20], [10, 40, 40]);
     }
+}
+
+module protrusionXform(a=140)
+{
+    // MAGIC NUMBER: 1.055 depends on 137 degree angle
+    rotate([0,0,a]) translate([extDia/2-bungieClipDia/2-1.055, 0, bungieClipCtrZ]) translate([0, 0, -bungieClipZ/2]) children();
 }
 
 clipAngle = -55;
