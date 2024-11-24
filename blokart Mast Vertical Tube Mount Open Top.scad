@@ -3,6 +3,7 @@ include <../OpenSCADdesigns/chamferedCylinders.scad>
 use <../OpenSCADdesigns/torus.scad>
 
 makeMount1 = false;
+makeMount2 = false;
 makeBungieRetainer = false;
 
 supportTubeOD = 43.6;
@@ -32,7 +33,6 @@ extDia = mastTubeOD + 2*d1;
 module exterior()
 {
     exteriorCore();
-    
     bungieClip();
 }
 
@@ -261,6 +261,32 @@ module mount1()
     }
 }
 
+module mount2()
+{
+    difference()
+    {
+        upperCore();
+
+        // Trim the bit of excess that didn't get taken care of...
+        tcy([42,42,-100], d=10, h=200);
+
+        // Chamfer top:
+        translate([topCtrX+37.5,0,0]) //[37.5,0,0])
+            rotate([0,0,45])
+                tcu([0, -5, -100], [30, 30, 200]);
+
+        // Screw holes:
+        screwHole( 45, screwHeadClearanceDia=9);
+        // screwHole(  0);
+        screwHole(-49);
+        
+        // Clip support tube:
+        supportTubeOffsetY = -supportTubeOD/2-4;
+        translate([0, supportTubeOffsetY, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
+        tcu([-200, -400+supportTubeOffsetY, -200], 400);
+    }
+}
+
 module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
 {
     screwCleanceHoleDia = 3.7; // #6 sheet-metal screw
@@ -347,14 +373,19 @@ module clip(d=0)
 
 if(developmentRender)
 {
-	display() mount1();
+    display() mount2();
+    oXY = 1.4;
+    displayGhost() tcy([-oXY,tubeCtrY2-oXY,0], d=41, h=200);
+
+	// display() mount1();
     // displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
-    displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
+    // displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
 
     // display() bungieRetainer();
 }
 else
 {
     if(makeMount1) rotate([0,0,180]) mount1();
+    if(makeMount2) rotate([0,0,180]) mount2();
     if(makeBungieRetainer) rotate([0,0,180]) bungieRetainer();
 }
