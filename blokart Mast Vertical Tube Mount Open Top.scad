@@ -67,7 +67,7 @@ module bungieClip()
     ctrZ = wallFitttingZ/2;
     
     // MAGIC NUMBER: 1.055 depends on 137 degree angle
-    translate([-7,tubeCtrY1,0]) rotate([0,0,140]) translate([extDia/2-d/2-1.055, 0, ctrZ]) rotate([0,0,15])
+    translate([-7,tubeCtrY1,0]) rotate([0,0,140]) translate([extDia/2-d/2-1.055, 0, ctrZ]) rotate([0,0,16])
     {
         x = 10.7;
         // MAGIC NUMBER: -0.1, depends on 1.055 above
@@ -79,7 +79,7 @@ module bungieClip()
             translate([x, 0, -z2/2]) simpleChamferedCylinderDoubleEnded(d=d, h=z2, cz=cz);
         }
         // Block to help adjust the final angle (above 9 degrees)
-        // %tcu([7, -20,-20], [10, 40, 40]);
+        %tcu([7, -20,-20], [10, 40, 40]);
     }
 }
 
@@ -318,11 +318,11 @@ module clip(d=0)
 
 if(developmentRender)
 {
-	// display() mount1();
+	display() mount1();
     // displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
     // displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
 
-    display() bungieRetainer();
+    // display() bungieRetainer();
 }
 else
 {
