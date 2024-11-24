@@ -197,7 +197,7 @@ module upperCore()
 }
 
 holderSpacingX = -p1.x;
-bungieHoleDia = 5;
+bungieHoleDia = 4;
 
 module mount1()
 {
@@ -274,8 +274,8 @@ module bungieRetainer()
             // Front extension to fit into the 90 degree bungie-clip:
             difference()
             {
-                // MAGIC NUMBER: 14.3723, should be calc. from d
-                translate([0,0,0]) rotate([0,90,0]) tcy([0,0,-frontFittingZ/2], d=14.3723, h=frontFittingZ, $fn=4);
+                // MAGIC NUMBER: 13.06555, should be calc. from d
+                translate([0,0,0]) rotate([0,90,0]) tcy([0,0,-frontFittingZ/2], d=13.06555, h=frontFittingZ, $fn=4);
                 // Trim back:
                 tcu([-200,0,-200], 400);
                 // Trim top and bottom:
