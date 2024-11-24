@@ -197,6 +197,8 @@ module upperCore()
 }
 
 holderSpacingX = -p1.x;
+bungieHoleDia = 5;
+
 module mount1()
 {
     difference()
@@ -221,7 +223,6 @@ module mount1()
         tcu([-200, -400-supportTubeOD/2, -200], 400);
 
         // Bungie hole:
-        bungieHoleDia = 5;
         translate([-31.9, 45, wallFitttingZ/2]) 
         {
             tcy([0, 0,-100], d=bungieHoleDia, h=200);
@@ -252,12 +253,48 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
 
 module bungieRetainer()
 {
+    cz = 3;
+    x1 = frontFittingZ + 2*cz + 2*bungieHoleDia + 4;
+    x2 = frontFittingZ;
+    x3 = 15;
+    d = bungieHoleDia + 6;
+    z = d * cos(22.5);
 
+    bungieHoleCtrOffsetX = frontFittingZ/2 + 1 + bungieHoleDia/2;
+
+    difference()
+    {
+        union()
+        {
+            translate([-x1/2, 0, 0]) rotate([0,90,0]) rotate([0,0,22.5]) simpleChamferedCylinderDoubleEnded1(d = d, h = x1, cz = cz, $fn=8);
+
+            // Front extension to fit into the 90 degree bungie-clip:
+            difference()
+            {
+                // MAGIC NUMBER: 14.3723, should be calc. from d
+                translate([0,0,0]) rotate([0,90,0]) tcy([0,0,-frontFittingZ/2], d=14.3723, h=frontFittingZ, $fn=4);
+                tcu([-200,0,-200], 400);
+                doubleZ() tcu([-200, -200, z/2], 400);
+            }
+
+            hull()
+            {
+                translate([- x2/2, 0, 0]) rotate([0,90,0]) rotate([0,0,22.5]) simpleChamferedCylinderDoubleEnded1(d = d, h = x2, cz = cz, $fn=8);
+                translate([- x3/2, 25, 0]) rotate([0,90,0]) rotate([0,0,22.5]) simpleChamferedCylinderDoubleEnded1(d = d, h = x3, cz = cz, $fn=8);
+            }
+        }
+
+        // Bungie holes:
+        doubleX() translate([bungieHoleCtrOffsetX,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=bungieHoleDia, h=100);
+    }
 }
 
 module clip(d=0)
 {
 	// tcu([-200, -200, wallFitttingZ/2-d], 400);
+
+    // Trim +X:
+    // tcu([0, -200, -200], 400);
 }
 
 if(developmentRender)
