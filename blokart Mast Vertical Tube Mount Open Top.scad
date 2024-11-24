@@ -276,8 +276,12 @@ module bungieRetainer()
             {
                 // MAGIC NUMBER: 14.3723, should be calc. from d
                 translate([0,0,0]) rotate([0,90,0]) tcy([0,0,-frontFittingZ/2], d=14.3723, h=frontFittingZ, $fn=4);
+                // Trim back:
                 tcu([-200,0,-200], 400);
+                // Trim top and bottom:
                 doubleZ() tcu([-200, -200, z/2], 400);
+                // Clip the front point:
+                tcu([-200,-400-7,-200], 400);
             }
 
             hull()
