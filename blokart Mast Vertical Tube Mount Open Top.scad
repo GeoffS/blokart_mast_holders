@@ -254,9 +254,12 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
 module bungieRetainer()
 {
     cz = 3;
+
     x1 = frontFittingZ + 2*cz + 2*bungieHoleDia + 4;
     x2 = frontFittingZ;
     x3 = 15;
+    y = 15;
+
     d = bungieHoleDia + 6;
     z = d * cos(22.5);
 
@@ -280,12 +283,15 @@ module bungieRetainer()
             hull()
             {
                 translate([- x2/2, 0, 0]) rotate([0,90,0]) rotate([0,0,22.5]) simpleChamferedCylinderDoubleEnded1(d = d, h = x2, cz = cz, $fn=8);
-                translate([- x3/2, 25, 0]) rotate([0,90,0]) rotate([0,0,22.5]) simpleChamferedCylinderDoubleEnded1(d = d, h = x3, cz = cz, $fn=8);
+                translate([- x3/2, y, 0]) rotate([0,90,0]) rotate([0,0,22.5]) simpleChamferedCylinderDoubleEnded1(d = d, h = x3, cz = cz, $fn=8);
             }
         }
 
         // Bungie holes:
         doubleX() translate([bungieHoleCtrOffsetX,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=bungieHoleDia, h=100);
+
+        // Finger grips:
+        doubleZ() translate([0, y-4, z/2-4]) cylinder(d1=0, d2=20, h=10);
     }
 }
 
