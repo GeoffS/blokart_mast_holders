@@ -125,12 +125,6 @@ module interior1()
 
 module interior2()
 {
-    // #interiorPiece([
-    //     [  0, tubeCtrY1, 0],
-    //     [  0, tubeCtrY2, 0],
-    //     [100, tubeCtrY2, 0],
-    // ]);
-
     difference()
     {
         interiorPiece([
@@ -140,10 +134,6 @@ module interior2()
         ]);
 
         tcu([0, tubeCtrY1, -200], 400);
-
-    //     translate([0,tubeCtrY1,0]) 
-    //         rotate([0,0,clipAngle])
-    //             tcu([0,0, -50], [25, 100, 100]);
     }
 }
 
@@ -272,11 +262,11 @@ module clip(d=0)
 
 if(developmentRender)
 {
-	display() mount1();
-    displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
-    displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
+	// display() mount1();
+    // displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
+    // displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
 
-    // display() bungieRetainer();
+    display() bungieRetainer();
 }
 else
 {
