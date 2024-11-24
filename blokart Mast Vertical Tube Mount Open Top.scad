@@ -76,7 +76,7 @@ module bungieClip()
             protrusionXform() simpleChamferedCylinderDoubleEnded(d=bungieClipDia, h=bungieClipZ, cz=bungieClipCZ);
             protrusionXform() rotate([0,0,protrusionAngle]) translate([x, 0, 0]) simpleChamferedCylinderDoubleEnded(d=bungieClipDia, h=bungieClipZ, cz=bungieClipCZ);
             // MAGIC NUMBER: 1.0 depends on 100 degree andgle and other protrusion params
-            protrusionXform(100) translate([1.0,0,0]) simpleChamferedCylinderDoubleEnded(d=bungieClipDia, h=bungieClipZ, cz=bungieClipCZ);
+            #protrusionXform(102) translate([0.98,0,0]) simpleChamferedCylinderDoubleEnded(d=bungieClipDia, h=bungieClipZ, cz=bungieClipCZ);
         }
         // Block to help adjust the final angle (above 9 degrees)
         // %protrusionXform() rotate([0,0,protrusionAngle]) tcu([7, -20,-20], [10, 40, 40]);
