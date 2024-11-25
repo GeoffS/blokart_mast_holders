@@ -326,6 +326,11 @@ module commonExteriorTrimming()
     supportTubeOffsetY = -supportTubeOD/2-4;
     translate([0, supportTubeOffsetY, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
     tcu([-200, -400+supportTubeOffsetY, -200], 400);
+
+    // Clip the sharp edges from the support-tube:
+    // MAGIC NUMBER: sharpEdgeClipY
+    sharpEdgeClipY = -7.5;
+    tcu([-200, -400+supportTubeOffsetY+supportTubeOD/2+sharpEdgeClipY, -200], 400);
 }
 
 module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
