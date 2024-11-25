@@ -207,7 +207,7 @@ module interior2a()
     {
         interiorPiece([
             [  0, tubeCtrY2, 0],
-            [100, tubeCtrY2y, 0],
+            [100, tubeCtrY2, 0],
         ]);
         tcu([-400+40,-200,-200], 400);
     }
