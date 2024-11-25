@@ -26,8 +26,12 @@ p3 = [p1.x, tubeCtrY1-d1/2+wallFittingCZ, 0];
 p4 = [p1.x, belowMastTubeY, 0];
 p5 = p4+[0,12,0];
 
-topCtrX = 25; //22;
+topCtr1X = 22;
+topCtr2X = 25;
 botCtrX = -25;
+
+tubeCtr2X = (topCtr1X + botCtrX);
+echo(str("tubeCtr2X = ", tubeCtr2X));
 
 extDia = mastTubeHoleDia + 2*d1;
 extDia2 = mastTubeHoleDia + 10;
@@ -50,11 +54,11 @@ module exteriorCore1()
 
         // +X End:
         tsccde(
-            t = [topCtrX,14,0],
+            t = [topCtr1X,14,0],
             d = extDia
         );
         tsccde(
-            t = [topCtrX,-30,0],
+            t = [topCtr1X,-30,0],
             d = extDia
         );
 
@@ -79,11 +83,11 @@ module exterior2()
     hull()
     {
         tsccde(
-            t = [topCtrX,0,0],
+            t = [topCtr2X,0,0],
             d = extDia
         );
         tsccde(
-            t = [topCtrX,-30,0],
+            t = [topCtr2X,-30,0],
             d = extDia
         );
 
@@ -96,11 +100,10 @@ module exterior2()
             d = extDia
         );
 
-        y = tubeCtrY2;
-        d123 = mastTubeHoleDia + 25;
+        ext2Dia = mastTubeHoleDia + 25;
         tsccde(
-            t = [0,y,0],
-            d = d123
+            t = [tubeCtr2X, tubeCtrY2, 0],
+            d = ext2Dia
         );
     }
 }
@@ -207,23 +210,11 @@ module interior1b()
     }
 }
 
-module interior2a()
-{
-    difference() 
-    {
-        interiorPiece([
-            [  0, tubeCtrY2, 0],
-            [100, tubeCtrY2, 0],
-        ]);
-        tcu([-400+40,-200,-200], 400);
-    }
-}
-
 module interior2b()
 {
     y = tubeCtrY2;
     d = mastTubeHoleDia;
-    interiorPiece([[  0, y, 0]], d = d);
+    interiorPiece([[tubeCtr2X, y, 0]], d = d);
 }
 
 module interiorPiece(centers, d = mastTubeHoleDia)
@@ -305,7 +296,7 @@ module mount1()
         tcy([42,42,-100], d=10, h=200);
 
         // Chamfer top:
-        translate([topCtrX+37.5,0,0]) //[37.5,0,0])
+        translate([topCtr1X+37.5,0,0]) //[37.5,0,0])
             rotate([0,0,45])
                 tcu([0, -5, -100], [30, 30, 200]);
 
