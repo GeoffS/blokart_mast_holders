@@ -207,16 +207,21 @@ module interior2a()
     {
         interiorPiece([
             [  0, tubeCtrY2, 0],
-            [100, tubeCtrY2, 0],
+            [100, tubeCtrY2y, 0],
         ]);
         tcu([-400+40,-200,-200], 400);
     }
 }
 
-module interiorPiece(centers)
+module interior2b()
 {
+    y = tubeCtrY2;
     d = mastTubeOD;
+    interiorPiece([[  0, y, 0]], d = d);
+}
 
+module interiorPiece(centers, d = mastTubeOD)
+{
     hull() for(p = centers)
     {
         interior_tChamferTop(p, d=d);
@@ -278,6 +283,7 @@ module upperCore2()
     {
         exterior2();
         interior2a();
+        interior2b();
     }
 }
 
