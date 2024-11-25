@@ -8,28 +8,29 @@ makeBungieRetainer = false;
 
 supportTubeOD = 43.6;
 
-mastTubeOD = 41+4; // #3 mast section
+mastTubeHoleDia = 41 + 4; // #3 mast section
 belowMastTubeY = 9;
 
 wallFitttingZ = 35;
 frontFittingZ = wallFitttingZ;
 wallFittingCZ=3;
 
-tubeCtrY1 = belowMastTubeY + mastTubeOD/2 + 9;
-tubeCtrY2 = belowMastTubeY + mastTubeOD/2;
+tubeCtrY1 = belowMastTubeY + mastTubeHoleDia/2 + 9;
+tubeCtrY2 = belowMastTubeY + mastTubeHoleDia/2;
 
 d1 = 12;
-p1 = [mastTubeOD/2+d1/2,0,0];
+p1 = [mastTubeHoleDia/2+d1/2,0,0];
 
 p2 = [p1.x, tubeCtrY1+d1/2, 0];
 p3 = [p1.x, tubeCtrY1-d1/2+wallFittingCZ, 0];
 p4 = [p1.x, belowMastTubeY, 0];
 p5 = p4+[0,12,0];
 
-topCtrX = 22;
+topCtrX = 25; //22;
+botCtrX = -25;
 
-extDia = mastTubeOD + 2*d1;
-extDia2 = mastTubeOD + 10;
+extDia = mastTubeHoleDia + 2*d1;
+extDia2 = mastTubeHoleDia + 10;
 
 module exterior1()
 {
@@ -41,10 +42,13 @@ module exteriorCore1()
 {
     hull()
     {
+        // Max. +Y exterior
         tsccde(
             t = [0,tubeCtrY1,0],
             d = extDia
         );
+
+        // +X End:
         tsccde(
             t = [topCtrX,14,0],
             d = extDia
@@ -53,10 +57,16 @@ module exteriorCore1()
             t = [topCtrX,-30,0],
             d = extDia
         );
+
         tsccde(
-            t = [-25,0,0],
+            t = [botCtrX,0,0],
             d = extDia
         );
+        tsccde(
+            t = [botCtrX,-30,0],
+            d = extDia
+        );
+
         tsccde(
             t = [-7,tubeCtrY1,0],
             d = extDia
@@ -66,35 +76,31 @@ module exteriorCore1()
 
 module exterior2()
 {
-    exteriorCore2();
-}
-
-module exteriorCore2()
-{
     hull()
     {
-        difference()
-        {
-            union()
-            {
-                tsccde(
-                    t = [topCtrX,14,0],
-                    d = extDia
-                );
-                tsccde(
-                    t = [topCtrX,-30,0],
-                    d = extDia
-                );
-            }
-            tcu([topCtrX-400,-180,-170], 400);
-        }
         tsccde(
-            t = [-25,0,0],
+            t = [topCtrX,0,0],
             d = extDia
         );
         tsccde(
-            t = [0,tubeCtrY1,0],
-            d = extDia2
+            t = [topCtrX,-30,0],
+            d = extDia
+        );
+
+        tsccde(
+            t = [botCtrX,0,0],
+            d = extDia
+            );
+        tsccde(
+            t = [botCtrX,-30,0],
+            d = extDia
+        );
+
+        y = tubeCtrY2;
+        d123 = mastTubeHoleDia + 25;
+        tsccde(
+            t = [0,y,0],
+            d = d123
         );
     }
 }
@@ -159,7 +165,7 @@ module clipRemoval1()
 module clipEnd(mx)
 {
     d1p = d1;
-    ty = mastTubeOD/2 + d1/2;
+    ty = mastTubeHoleDia/2 + d1/2;
     mirror([mx,0,0]) 
         translate([0,tubeCtrY1,0]) 
             rotate([0,0,clipAngle])
@@ -216,11 +222,11 @@ module interior2a()
 module interior2b()
 {
     y = tubeCtrY2;
-    d = mastTubeOD;
+    d = mastTubeHoleDia;
     interiorPiece([[  0, y, 0]], d = d);
 }
 
-module interiorPiece(centers, d = mastTubeOD)
+module interiorPiece(centers, d = mastTubeHoleDia)
 {
     hull() for(p = centers)
     {
@@ -282,7 +288,6 @@ module upperCore2()
     difference()
     {
         exterior2();
-        interior2a();
         interior2b();
     }
 }
@@ -299,7 +304,11 @@ module mount1()
         // Trim the bit of excess that didn't get taken care of...
         tcy([42,42,-100], d=10, h=200);
 
-        
+        // Chamfer top:
+        translate([topCtrX+37.5,0,0]) //[37.5,0,0])
+            rotate([0,0,45])
+                tcu([0, -5, -100], [30, 30, 200]);
+
 
         commonExteriorTrimming();
     }
@@ -311,20 +320,12 @@ module mount2()
     {
         upperCore2();
 
-        // Trim the bit of excess that didn't get taken care of...
-        tcy([42,42,-100], d=10, h=200);
-
         commonExteriorTrimming();
     }
 }
 
 module commonExteriorTrimming()
 {
-    // Chamfer top:
-    translate([topCtrX+37.5,0,0]) //[37.5,0,0])
-        rotate([0,0,45])
-            tcu([0, -5, -100], [30, 30, 200]);
-
     // Screw holes:
     screwHole( 45, screwHeadClearanceDia=9);
     // screwHole(  0);
@@ -423,8 +424,13 @@ module clip(d=0)
 if(developmentRender)
 {
     display() mount2();
+    // displayGhost() difference()
+    // {
+    //     mount1();
+    //     tcu([-200, -200, wallFitttingZ/2], 400);
+    // }
     oXY = 1.4;
-    displayGhost() tcy([-oXY,tubeCtrY2-oXY,0], d=41, h=200);
+    // displayGhost() tcy([-oXY,tubeCtrY2-oXY,0], d=41, h=200);
     displayGhost() translate([150, 0,0]) mount1();
 
 	// display() mount1();
