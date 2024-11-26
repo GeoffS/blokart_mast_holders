@@ -5,6 +5,7 @@ use <../OpenSCADdesigns/torus.scad>
 makeMount1 = false;
 makeMount2 = false;
 makeBungieRetainer = false;
+makeDrillGuide = false;
 
 supportTubeOD = 43.6;
 
@@ -315,12 +316,15 @@ module mount2()
     }
 }
 
+screwHoleTopX = 45;
+screwHoleBotX = -49;
+
 module commonExteriorTrimming()
 {
     // Screw holes:
-    screwHole( 45, screwHeadClearanceDia=9);
+    screwHole(screwHoleTopX, screwHeadClearanceDia=9);
     // screwHole(  0);
-    screwHole(-49);
+    screwHole(screwHoleBotX);
     
     // Clip support tube:
     supportTubeOffsetY = -supportTubeOD/2-4;
@@ -351,6 +355,32 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
             tcy([0,0,-100+nothing], d=screwHeadClearanceDia, h=100);
         }
     }
+}
+
+module drillGuide()
+{
+    dgDia = 10;
+    dgZ = 45;
+
+    difference()
+    {
+        translate([(screwHoleTopX+screwHoleBotX)/2,0,0]) hull()
+        {
+            doubleX() doubleZ() translate([56, 5, dgZ/2-dgDia/2]) rotate([90,0,0]) cylinder(d=dgDia, h=30);
+        }
+
+        // The support-tube:
+        translate([0, -30, 0]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
+
+        // The Screw holes:
+        drillGuideScrewHole(screwHoleTopX);
+        drillGuideScrewHole(screwHoleBotX);
+    }
+}
+
+module drillGuideScrewHole(x)
+{
+    translate([x,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=1.6, h=100);
 }
 
 retainerBungieHoleDia = 3.5;
@@ -419,15 +449,19 @@ module clip(d=0)
 
 if(developmentRender)
 {
-    display() mount2();
+    display() drillGuide();
+    displayGhost() translate([150, 0,0]) mount1();
+    displayGhost() translate([-150,0,0]) mount2();
+
+    // display() mount2();
     // displayGhost() difference()
     // {
     //     mount1();
     //     tcu([-200, -200, wallFitttingZ/2], 400);
     // }
-    oXY = 1.4;
+    // oXY = 1.4;
     // displayGhost() tcy([-oXY,tubeCtrY2-oXY,0], d=41, h=200);
-    displayGhost() translate([150, 0,0]) mount1();
+    // displayGhost() translate([150, 0,0]) mount1();
 
 	// display() mount1();
     // displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
@@ -440,4 +474,5 @@ else
     if(makeMount1) rotate([0,0,180]) mount1();
     if(makeMount2) rotate([0,0,180]) mount2();
     if(makeBungieRetainer) rotate([0,0,180]) bungieRetainer();
+	if(makeDrillGuide) rotate([-90,0,0]) drillGuide();
 }
