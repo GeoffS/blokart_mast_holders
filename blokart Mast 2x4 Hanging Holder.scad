@@ -11,13 +11,15 @@ belowMastTubeY = 9;
 wallFitttingZ = 35;
 wallFittingCZ=3;
 
-extDia = mastTubeHoleDia + 24;
+extDia = 25;
 
 twoByFourNarrow = 1.5 * 25.4;
 overlapWith2By4 = twoByFourNarrow - 2;
 
-topCtrX = 22;
-botCtrX = -22;
+mountX = 2*48;;
+topCtrX = mountX/2 - extDia/2;
+botCtrX = -topCtrX;
+
 extraY = overlapWith2By4 - extDia/2;
 
 interior_dh = 1;
