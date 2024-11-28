@@ -11,12 +11,7 @@ belowMastTubeY = 9;
 wallFitttingZ = 35;
 wallFittingCZ=3;
 
-tubeCtrY1 = belowMastTubeY + mastTubeHoleDia/2 + 9;
-tubeCtrY2 = belowMastTubeY + mastTubeHoleDia/2;
-
-d1 = 12;
-
-extDia = mastTubeHoleDia + 2*d1;
+extDia = mastTubeHoleDia + 24;
 
 twoByFourNarrow = 1.5 * 25.4;
 overlapWith2By4 = twoByFourNarrow - 2;
@@ -118,20 +113,12 @@ module mount1()
     {
         exterior1();
         interior1();
-        commonExteriorTrimming();
+
+        screwHoles();
+
+        // 2x4:
+        tcu([-200,-400, wallFitttingZ - 15], 400);
     }
-}
-
-screwHoleTopX = 45;
-screwHoleBotX = -49;
-extraBetweenSupportAndMountY = 4;
-
-module commonExteriorTrimming()
-{
-    screwHoles();
-
-    // 2x4:
-    tcu([-200,-400, wallFitttingZ - 15], 400);
 }
 
 module screwHoles()
@@ -139,43 +126,39 @@ module screwHoles()
     screwCleanceHoleDia = 4.5; // #8 Sheet-metal screw
 
     doubleX() tcy([30, -overlapWith2By4/2, -100], d=screwCleanceHoleDia, h=200);
-
-    
 }
 
 module drillGuide()
 {
-    difference()
-    {
-        hull()
-        {
-            drillGuideCorner(topCtrX + extDia/2);
-            drillGuideCorner(botCtrX - extDia/2);
-        }
+    // difference()
+    // {
+    //     hull()
+    //     {
+    //         drillGuideCorner(topCtrX + extDia/2);
+    //         drillGuideCorner(botCtrX - extDia/2);
+    //     }
 
-        // The Screw holes:
-        drillGuideScrewHole(screwHoleTopX);
-        drillGuideScrewHole(screwHoleBotX);
-    }
+    //     // The Screw holes:
+    //     drillGuideScrewHole(screwHoleTopX);
+    //     drillGuideScrewHole(screwHoleBotX);
+    // }
 }
 
-module drillGuideCorner(nominalX)
-{
-    echo(str("drillGuideCorner() nominalX = ", nominalX));
-    dgDia = 10;
-    dgZ = 45;
-    x = (nominalX > 0) ? nominalX - dgDia/2 : nominalX + dgDia/2;
-    echo(str("drillGuideCorner() x = ", x));
+// module drillGuideCorner(nominalX)
+// {
+//     echo(str("drillGuideCorner() nominalX = ", nominalX));
+//     dgDia = 10;
+//     dgZ = 45;
+//     x = (nominalX > 0) ? nominalX - dgDia/2 : nominalX + dgDia/2;
+//     echo(str("drillGuideCorner() x = ", x));
     
-    doubleZ() translate([x, 5, dgZ/2-dgDia/2]) rotate([90,0,0]) cylinder(d=dgDia, h=30);
-}
+//     doubleZ() translate([x, 5, dgZ/2-dgDia/2]) rotate([90,0,0]) cylinder(d=dgDia, h=30);
+// }
 
-module drillGuideScrewHole(x)
-{
-    translate([x,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=1.8, h=100);
-}
-
-retainerBungieHoleDia = 3.5;
+// module drillGuideScrewHole(x)
+// {
+//     translate([x,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=1.8, h=100);
+// }
 
 module clip(d=0)
 {
