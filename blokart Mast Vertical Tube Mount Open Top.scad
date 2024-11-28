@@ -400,7 +400,7 @@ module drillGuideCorner(nominalX)
 
 module drillGuideScrewHole(x)
 {
-    translate([x,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=1.6, h=100);
+    translate([x,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=1.8, h=100);
 }
 
 retainerBungieHoleDia = 3.5;
