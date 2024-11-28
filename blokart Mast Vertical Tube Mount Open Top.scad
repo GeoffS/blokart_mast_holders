@@ -488,9 +488,9 @@ if(developmentRender)
     // displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
 
     displayGhost() mount2();
-    displayGhost() translate([0,0,-130]) mount1();
-    displayGhost() tcy([ 0,tubeCtrY1+2,-200], d=41, h=400);
-    display() translate([0,0,80]) drillGuide();
+    displayGhost() translate([0, 0, -65]) mount1();
+    displayGhost() tcy([ 0, tubeCtrY1+2, -200], d=41, h=400);
+    display() translate([0, 0, 80]) drillGuide();
 
     // display() bungieRetainer();
 }
