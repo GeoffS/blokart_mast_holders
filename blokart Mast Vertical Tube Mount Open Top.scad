@@ -28,10 +28,10 @@ p4 = [p1.x, belowMastTubeY, 0];
 p5 = p4+[0,12,0];
 
 topCtr1X = 22;
-topCtr2X = 25;
 botCtrX = -25;
 
-tubeCtr2X = (topCtr1X + botCtrX);
+tubeCtr2X = 0; //(topCtr1X + botCtrX);
+tubeCtr2Y = tubeCtrY1 - 1.5;
 echo(str("tubeCtr2X = ", tubeCtr2X));
 
 extDia = mastTubeHoleDia + 2*d1;
@@ -84,11 +84,11 @@ module exterior2()
     hull()
     {
         tsccde(
-            t = [topCtr2X,0,0],
+            t = [topCtr1X,0,0],
             d = extDia
         );
         tsccde(
-            t = [topCtr2X,-30,0],
+            t = [topCtr1X,-30,0],
             d = extDia
         );
 
@@ -103,7 +103,7 @@ module exterior2()
 
         ext2Dia = mastTubeHoleDia + 25;
         tsccde(
-            t = [tubeCtr2X, tubeCtrY2, 0],
+            t = [tubeCtr2X, tubeCtr2Y, 0],
             d = ext2Dia
         );
     }
@@ -213,8 +213,8 @@ module interior1b()
 
 module interior2b()
 {
-    y = tubeCtrY2;
-    d = mastTubeHoleDia;
+    y = tubeCtr2Y;
+    d = mastTubeHoleDia + 3;
     interiorPiece([[tubeCtr2X, y, 0]], d = d);
 }
 
@@ -318,6 +318,7 @@ module mount2()
 
 screwHoleTopX = 45;
 screwHoleBotX = -49;
+extraBetweenSupportAndMountY = 4;
 
 module commonExteriorTrimming()
 {
@@ -327,7 +328,7 @@ module commonExteriorTrimming()
     screwHole(screwHoleBotX);
     
     // Clip support tube:
-    supportTubeOffsetY = -supportTubeOD/2-4;
+    supportTubeOffsetY = -supportTubeOD/2 - extraBetweenSupportAndMountY;
     translate([0, supportTubeOffsetY, wallFitttingZ/2]) rotate([0,90,0]) tcy([0, 0, -200], d=supportTubeOD, h=400);
     tcu([-200, -400+supportTubeOffsetY, -200], 400);
 
@@ -335,6 +336,14 @@ module commonExteriorTrimming()
     // MAGIC NUMBER: sharpEdgeClipY
     sharpEdgeClipY = -7.5;
     tcu([-200, -400+supportTubeOffsetY+supportTubeOD/2+sharpEdgeClipY, -200], 400);
+
+    topMarker();
+}
+
+module topMarker(y=-extraBetweenSupportAndMountY, z=wallFitttingZ/2)
+{
+    // Mark to designate the top:
+    translate([screwHoleTopX+7, y+1.5, z]) rotate([90,0,0]) cylinder(d1=0, d2=10, h=5);
 }
 
 module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
@@ -359,14 +368,12 @@ module screwHole(x, z=frontFittingZ/2, screwHeadClearanceDia=11)
 
 module drillGuide()
 {
-    dgDia = 10;
-    dgZ = 45;
-
     difference()
     {
-        translate([(screwHoleTopX+screwHoleBotX)/2,0,0]) hull()
+        hull()
         {
-            doubleX() doubleZ() translate([56, 5, dgZ/2-dgDia/2]) rotate([90,0,0]) cylinder(d=dgDia, h=30);
+            drillGuideCorner(topCtr1X + extDia/2);
+            drillGuideCorner(botCtrX - extDia/2);
         }
 
         // The support-tube:
@@ -375,7 +382,20 @@ module drillGuide()
         // The Screw holes:
         drillGuideScrewHole(screwHoleTopX);
         drillGuideScrewHole(screwHoleBotX);
+
+        topMarker(y=-8.1, z=0);
     }
+}
+
+module drillGuideCorner(nominalX)
+{
+    echo(str("drillGuideCorner() nominalX = ", nominalX));
+    dgDia = 10;
+    dgZ = 45;
+    x = (nominalX > 0) ? nominalX - dgDia/2 : nominalX + dgDia/2;
+    echo(str("drillGuideCorner() x = ", x));
+    
+    doubleZ() translate([x, 5, dgZ/2-dgDia/2]) rotate([90,0,0]) cylinder(d=dgDia, h=30);
 }
 
 module drillGuideScrewHole(x)
@@ -449,9 +469,9 @@ module clip(d=0)
 
 if(developmentRender)
 {
-    display() drillGuide();
-    displayGhost() translate([150, 0,0]) mount1();
-    displayGhost() translate([-150,0,0]) mount2();
+    // display() drillGuide();
+    // displayGhost() translate([150, 0,0]) mount1();
+    // displayGhost() translate([-150,0,0]) mount2();
 
     // display() mount2();
     // displayGhost() difference()
@@ -466,6 +486,11 @@ if(developmentRender)
 	// display() mount1();
     // displayGhost() tcy([25,tubeCtrY2-2,0], d=41, h=200);
     // displayGhost() tcy([ 0,tubeCtrY1+2,0], d=41, h=200);
+
+    displayGhost() mount2();
+    displayGhost() translate([0,0,-130]) mount1();
+    displayGhost() tcy([ 0,tubeCtrY1+2,-200], d=41, h=400);
+    display() translate([0,0,80]) drillGuide();
 
     // display() bungieRetainer();
 }
