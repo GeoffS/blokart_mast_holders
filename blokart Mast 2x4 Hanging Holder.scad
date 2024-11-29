@@ -184,7 +184,7 @@ module clip(d=0)
 	// tcu([-200, -200, wallFitttingZ/2-d], 400);
 
     // Through screw holes:
-    tcu([-200, screwHoleCtrY-400-d, -200], 400);
+    // tcu([-200, screwHoleCtrY-400-d, -200], 400);
 
     // Trim +X:
     // tcu([0, -200, -200], 400);
@@ -194,7 +194,7 @@ if(developmentRender)
 {
     display() mount1();
     // Mast:
-    displayGhost() tcy([0,34.3,-100], d=41, h=200);
+    displayGhost() tcy([0,32.3,-100], d=41, h=200);
     // 2x4:
     displayGhost() twoByFourGhost();
 }
