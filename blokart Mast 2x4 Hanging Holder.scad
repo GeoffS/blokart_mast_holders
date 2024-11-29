@@ -8,7 +8,7 @@ makeDrillGuide = false;
 mastTubeHoleDia = 41 + 4; // #3 mast section
 belowMastTubeY = 9;
 
-wallFitttingZ = 35;
+wallFitttingZ = 25;
 wallFittingCZ=3;
 
 extDia = 25;
@@ -119,7 +119,7 @@ module mount1()
         screwHoles();
 
         // 2x4:
-        tcu([-200,-400, wallFitttingZ - 15], 400);
+        tcu([-200,-400, 12], 400);
     }
 }
 
