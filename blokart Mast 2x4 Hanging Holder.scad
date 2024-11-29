@@ -3,7 +3,8 @@ include <../OpenSCADdesigns/chamferedCylinders.scad>
 use <../OpenSCADdesigns/torus.scad>
 
 makeMount1 = false;
-makeDrillGuide = false;
+makeMount2 = false;
+// makeDrillGuide = false;
 
 mastTubeHoleDia = 41 + 6; // #3 mast section
 
@@ -115,14 +116,56 @@ module mount1()
         exterior1();
         interior1();
 
-        screwHoles();
+        mount1ScrewHoleXform() screwHole();
 
         // 2x4:
         tcu([-200,-400, twoByfourOffsetZ], 400);
     }
 
     // Screw recess sacrificial layer:
-    screwHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
+    mount1ScrewHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
+}
+
+module mount1ScrewHoleXform()
+{
+    doubleX() translate([30, screwHoleCtrY, 0]) children();
+}
+
+module mount2()
+{
+    difference()
+    {
+        hull()
+        {
+            exterior1();
+            secondMountXform() exterior1();
+        }
+        interior1();
+        secondMountXform()  interior1();
+
+        mount2ScrewHoleXform() screwHole();
+
+        // 2x4:
+        tcu([-200, -400, twoByfourOffsetZ], 400);
+    }
+
+
+    // Screw recess sacrificial layer:
+    mount2ScrewHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
+}
+
+module mount2ScrewHoleXform()
+{
+    dx = 0;
+    translate([dx, screwHoleCtrY, 0]) children();
+    translate([-secondMountOffsetX-dx, screwHoleCtrY, 0]) children();
+}
+
+secondMountOffsetX = 65;
+
+module secondMountXform()
+{
+    translate([-secondMountOffsetX,0,0]) children();
 }
 
 layerThickness = 0.2;
@@ -132,19 +175,11 @@ screwCleanceHoleDia = 4.5; // #8 Sheet-metal screw
 screwHeadClearanceHoleDia = 8.6; // #8 Pan-Head
 screwHeadClearanceHoleZ = 4;
 
-module screwHoles()
+module screwHole() 
 {
-    screwHoleXform()
-    {
-        tcy([0, 0, -100], d=screwCleanceHoleDia, h=200);
-        tcy([0, 0, -100+screwHeadClearanceHoleZ], d=screwHeadClearanceHoleDia, h=100);
-        translate([0,0,-10+screwHeadClearanceHoleDia/2+1]) cylinder(d1=20, d2=0, h=10);
-    }
-}
-
-module screwHoleXform()
-{
-    doubleX() translate([30, screwHoleCtrY, 0]) children();
+    tcy([0, 0, -100], d=screwCleanceHoleDia, h=200);
+    tcy([0, 0, -100+screwHeadClearanceHoleZ], d=screwHeadClearanceHoleDia, h=100);
+    translate([0,0,-10+screwHeadClearanceHoleDia/2+1]) cylinder(d1=20, d2=0, h=10);
 }
 
 module drillGuide()
@@ -192,26 +227,34 @@ module clip(d=0)
 
 if(developmentRender)
 {
-    display() mount1();
+    // display() mount1();
+    // // Mast:
+    // displayGhost() tcy([0,32.3,-100], d=41, h=200);
+    // // 2x4:
+    // displayGhost() twoByFourGhost();
+
+    display() mount2();
+
+    displayGhost() translate([130,0,0]) mount1();
     // Mast:
     displayGhost() tcy([0,32.3,-100], d=41, h=200);
     // 2x4:
-    displayGhost() twoByFourGhost();
+    displayGhost() twoByFourGhost(400, -10);
 }
 else
 {
     if(makeMount1) rotate([0,0,180]) mount1();
-	if(makeDrillGuide) rotate([-90,0,0]) drillGuide();
+    if(makeMount2) rotate([0,0,180]) mount2();
+	// if(makeDrillGuide) rotate([-90,0,0]) drillGuide();
 }
 
-module twoByFourGhost()
+module twoByFourGhost(x=300, dx=0)
 {
     w = 25.4 * 1.5;
     h = 25.4 * 3.5;
     d = 4;
     hull()
     {
-        
-        translate([0, -h/2, twoByfourOffsetZ+w/2]) doubleY() doubleZ() rotate([0,90,0]) tcy([w/2-d/2, -h/2+d/2, -150], d=d, h=300);
+        translate([dx, -w/2, twoByfourOffsetZ+h/2]) doubleY() doubleZ() rotate([0,90,0]) tcy([-h/2+d/2, w/2-d/2, -150], d=d, h=x);
     }
 }
