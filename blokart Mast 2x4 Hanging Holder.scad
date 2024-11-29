@@ -120,13 +120,30 @@ module mount1()
         // 2x4:
         tcu([-200,-400, twoByfourOffsetZ], 400);
     }
+
+    // Screw recess sacrificial layer:
+    screwHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
 }
+
+layerThickness = 0.2;
+
+screwHoleCtrY = -overlapWith2By4/2;
+screwCleanceHoleDia = 4.5; // #8 Sheet-metal screw
+screwHeadClearanceHoleDia = 8.6; // #8 Pan-Head
+screwHeadClearanceHoleZ = 4;
 
 module screwHoles()
 {
-    screwCleanceHoleDia = 4.5; // #8 Sheet-metal screw
+    screwHoleXform()
+    {
+        tcy([0, 0, -100], d=screwCleanceHoleDia, h=200);
+        tcy([0, 0, -100+screwHeadClearanceHoleZ], d=screwHeadClearanceHoleDia, h=100);
+    }
+}
 
-    doubleX() tcy([30, -overlapWith2By4/2, -100], d=screwCleanceHoleDia, h=200);
+module screwHoleXform()
+{
+    doubleX() translate([30, screwHoleCtrY, 0]) children();
 }
 
 module drillGuide()
@@ -164,6 +181,9 @@ module drillGuide()
 module clip(d=0)
 {
 	// tcu([-200, -200, wallFitttingZ/2-d], 400);
+
+    // Through screw holes:
+    tcu([-200, screwHoleCtrY-400-d, -200], 400);
 
     // Trim +X:
     // tcu([0, -200, -200], 400);
