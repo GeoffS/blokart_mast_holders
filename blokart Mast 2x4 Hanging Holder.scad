@@ -187,5 +187,10 @@ module twoByFourGhost()
 {
     w = 25.4 * 1.5;
     h = 25.4 * 3.5;
-    tcu([-150, -h, twoByfourOffsetZ], [300,h,w]);
+    d = 4;
+    hull()
+    {
+        
+        translate([0, -h/2, twoByfourOffsetZ+w/2]) doubleY() doubleZ() rotate([0,90,0]) tcy([w/2-d/2, -h/2+d/2, -150], d=d, h=300);
+    }
 }
