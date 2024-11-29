@@ -5,8 +5,7 @@ use <../OpenSCADdesigns/torus.scad>
 makeMount1 = false;
 makeDrillGuide = false;
 
-mastTubeHoleDia = 41 + 4; // #3 mast section
-belowMastTubeY = 9;
+mastTubeHoleDia = 41 + 6; // #3 mast section
 
 wallFitttingZ = 25;
 wallFittingCZ=3;
@@ -26,7 +25,7 @@ interior_dh = 1;
 interior_cz = wallFittingCZ + interior_dh;
 
 tubeCtr2X = 0;
-tubeCtr2Y = mastTubeHoleDia/2 + 10;
+tubeCtr2Y = mastTubeHoleDia/2 + 6;
 echo(str("tubeCtr2X = ", tubeCtr2X));
 
 module exterior1()
@@ -51,7 +50,7 @@ module exterior1()
             d = extDia
         );
 
-        ext2Dia = mastTubeHoleDia + 25;
+        ext2Dia = mastTubeHoleDia + 20;
         tsccde(
             t = [tubeCtr2X, tubeCtr2Y, 0],
             d = ext2Dia
@@ -61,9 +60,7 @@ module exterior1()
 
 module interior1()
 {
-    y = tubeCtr2Y;
-    d = mastTubeHoleDia + 3;
-    interiorPiece([[tubeCtr2X, y, 0]], d = d);
+    interiorPiece([[tubeCtr2X, tubeCtr2Y, 0]]);
 }
 
 module interiorPiece(centers, d = mastTubeHoleDia)
@@ -109,6 +106,8 @@ module interior_tChamferTop(t, d)
         cylinder(d2=d+2*interior_cz, d1=d, h=interior_cz);
 }
 
+twoByfourOffsetZ = 12;
+
 module mount1()
 {
     difference()
@@ -119,7 +118,7 @@ module mount1()
         screwHoles();
 
         // 2x4:
-        tcu([-200,-400, 12], 400);
+        tcu([-200,-400, twoByfourOffsetZ], 400);
     }
 }
 
@@ -173,10 +172,20 @@ module clip(d=0)
 if(developmentRender)
 {
     display() mount1();
-    displayGhost() tcy([0,35.8,-100], d=41, h=200);
+    // Mast:
+    displayGhost() tcy([0,34.3,-100], d=41, h=200);
+    // 2x4:
+    displayGhost() twoByFourGhost();
 }
 else
 {
     if(makeMount1) rotate([0,0,180]) mount1();
 	if(makeDrillGuide) rotate([-90,0,0]) drillGuide();
+}
+
+module twoByFourGhost()
+{
+    w = 25.4 * 1.5;
+    h = 25.4 * 3.5;
+    tcu([-150, -h, twoByfourOffsetZ], [300,h,w]);
 }
