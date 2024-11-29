@@ -138,6 +138,7 @@ module screwHoles()
     {
         tcy([0, 0, -100], d=screwCleanceHoleDia, h=200);
         tcy([0, 0, -100+screwHeadClearanceHoleZ], d=screwHeadClearanceHoleDia, h=100);
+        translate([0,0,-10+screwHeadClearanceHoleDia/2+1]) cylinder(d1=20, d2=0, h=10);
     }
 }
 
