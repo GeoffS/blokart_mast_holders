@@ -182,32 +182,32 @@ module screwHole()
     translate([0,0,-10+screwHeadClearanceHoleDia/2+1]) cylinder(d1=20, d2=0, h=10);
 }
 
-module drillGuide()
+module mount2DrillGuild()
 {
-    // difference()
-    // {
-    //     hull()
-    //     {
-    //         drillGuideCorner(topCtrX + extDia/2);
-    //         drillGuideCorner(botCtrX - extDia/2);
-    //     }
+    difference()
+    {
+        hull()
+        {
+            drillGuideCorner(topCtrX + extDia/2);
+            drillGuideCorner(botCtrX - extDia/2);
+        }
 
-    //     // The Screw holes:
-    //     drillGuideScrewHole(screwHoleTopX);
-    //     drillGuideScrewHole(screwHoleBotX);
-    // }
+        // // The Screw holes:
+        // drillGuideScrewHole(screwHoleTopX);
+        // drillGuideScrewHole(screwHoleBotX);
+    }
 }
 
-// module drillGuideCorner(nominalX)
-// {
-//     echo(str("drillGuideCorner() nominalX = ", nominalX));
-//     dgDia = 10;
-//     dgZ = 45;
-//     x = (nominalX > 0) ? nominalX - dgDia/2 : nominalX + dgDia/2;
-//     echo(str("drillGuideCorner() x = ", x));
+module drillGuideCorner(nominalX)
+{
+    echo(str("drillGuideCorner() nominalX = ", nominalX));
+    dgDia = 10;
+    dgZ = 45;
+    x = (nominalX > 0) ? nominalX - dgDia/2 : nominalX + dgDia/2;
+    echo(str("drillGuideCorner() x = ", x));
     
-//     doubleZ() translate([x, 5, dgZ/2-dgDia/2]) rotate([90,0,0]) cylinder(d=dgDia, h=30);
-// }
+    doubleZ() translate([x, 5, dgZ/2-dgDia/2]) rotate([0,0,0]) cylinder(d=dgDia, h=30);
+}
 
 // module drillGuideScrewHole(x)
 // {
@@ -233,13 +233,20 @@ if(developmentRender)
     // // 2x4:
     // displayGhost() twoByFourGhost();
 
-    display() mount2();
+    // display() mount2();
+    // displayGhost() translate([130,0,0]) mount1();
+    // // Mast:
+    // displayGhost() tcy([0,32.3,-100], d=41, h=200);
+    // // 2x4:
+    // displayGhost() twoByFourGhost(400, -10);
 
+    display() mount2DrillGuild();
+    displayGhost() translate([-130,0,0]) mount2();
     displayGhost() translate([130,0,0]) mount1();
     // Mast:
-    displayGhost() tcy([0,32.3,-100], d=41, h=200);
+    // displayGhost() tcy([0,32.3,-100], d=41, h=200);
     // 2x4:
-    displayGhost() twoByFourGhost(400, -10);
+    displayGhost() twoByFourGhost(500, -130);
 }
 else
 {
