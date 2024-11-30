@@ -4,17 +4,18 @@ use <../OpenSCADdesigns/torus.scad>
 
 makeMount1 = false;
 makeMount2 = false;
-// makeDrillGuide = false;
+makeDrillGuide2 = false;
 
 mastTubeHoleDia = 41 + 6; // #3 mast section
 
 wallFitttingZ = 25;
-wallFittingCZ=3;
+wallFittingCZ = 3;
 
 extDia = 25;
 
 twoByFourNarrow = 1.5 * 25.4;
 overlapWith2By4 = twoByFourNarrow - 2;
+echo(str("overlapWith2By4 = ", overlapWith2By4));
 
 mountX = 2*48;;
 topCtrX = mountX/2 - extDia/2;
@@ -118,8 +119,7 @@ module mount1()
 
         mount1ScrewHoleXform() screwHole();
 
-        // 2x4:
-        tcu([-200,-400, twoByfourOffsetZ], 400);
+        twoByFour();
     }
 
     // Screw recess sacrificial layer:
@@ -145,13 +145,17 @@ module mount2()
 
         mount2ScrewHoleXform() screwHole();
 
-        // 2x4:
-        tcu([-200, -400, twoByfourOffsetZ], 400);
+        twoByFour();
     }
 
 
     // Screw recess sacrificial layer:
     mount2ScrewHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
+}
+
+module twoByFour()
+{
+    tcu([-200, -400, twoByfourOffsetZ], 400);
 }
 
 module mount2ScrewHoleXform()
@@ -182,15 +186,25 @@ module screwHole()
     translate([0,0,-10+screwHeadClearanceHoleDia/2+1]) cylinder(d1=20, d2=0, h=10);
 }
 
-module mount2DrillGuild()
+module mount2DrillGuide()
 {
     difference()
     {
+        x1 = topCtrX + extDia/2;
+        x2 = botCtrX - extDia/2;
+        y1 = -overlapWith2By4;
+        y2 = 12;
         hull()
         {
-            drillGuideCorner(topCtrX + extDia/2);
-            drillGuideCorner(botCtrX - extDia/2);
+            drillGuideCorner(x1, y1);
+            drillGuideCorner(x2, y1);
+            drillGuideCorner(x1, y2);
+            drillGuideCorner(x2, y2);
         }
+
+        twoByFour();
+
+        mount2ScrewHoleXform() tcy([secondMountOffsetX/2,0,-50], d=2, h=100);
 
         // // The Screw holes:
         // drillGuideScrewHole(screwHoleTopX);
@@ -198,15 +212,18 @@ module mount2DrillGuild()
     }
 }
 
-module drillGuideCorner(nominalX)
+module drillGuideCorner(nominalX, nominalY)
 {
     echo(str("drillGuideCorner() nominalX = ", nominalX));
     dgDia = 10;
-    dgZ = 45;
+    dgZ = 30;
+
     x = (nominalX > 0) ? nominalX - dgDia/2 : nominalX + dgDia/2;
     echo(str("drillGuideCorner() x = ", x));
+
+    y = (nominalY > 0) ? nominalY - dgDia/2 : nominalY + dgDia/2;
     
-    doubleZ() translate([x, 5, dgZ/2-dgDia/2]) rotate([0,0,0]) cylinder(d=dgDia, h=30);
+    translate([x, y, 0]) cylinder(d=dgDia, h=dgZ);
 }
 
 // module drillGuideScrewHole(x)
@@ -240,7 +257,7 @@ if(developmentRender)
     // // 2x4:
     // displayGhost() twoByFourGhost(400, -10);
 
-    display() mount2DrillGuild();
+    display() mount2DrillGuide();
     displayGhost() translate([-130,0,0]) mount2();
     displayGhost() translate([130,0,0]) mount1();
     // Mast:
@@ -252,7 +269,7 @@ else
 {
     if(makeMount1) rotate([0,0,180]) mount1();
     if(makeMount2) rotate([0,0,180]) mount2();
-	// if(makeDrillGuide) rotate([-90,0,0]) drillGuide();
+	if(makeDrillGuide2) mount2DrillGuide();
 }
 
 module twoByFourGhost(x=300, dx=0)
