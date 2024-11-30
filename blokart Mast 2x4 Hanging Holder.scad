@@ -148,7 +148,6 @@ module mount2()
         twoByFour();
     }
 
-
     // Screw recess sacrificial layer:
     mount2ScrewHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
 }
@@ -205,10 +204,6 @@ module mount2DrillGuide()
         twoByFour();
 
         mount2ScrewHoleXform() tcy([secondMountOffsetX/2,0,-50], d=2, h=100);
-
-        // // The Screw holes:
-        // drillGuideScrewHole(screwHoleTopX);
-        // drillGuideScrewHole(screwHoleBotX);
     }
 }
 
@@ -225,11 +220,6 @@ module drillGuideCorner(nominalX, nominalY)
     
     translate([x, y, 0]) cylinder(d=dgDia, h=dgZ);
 }
-
-// module drillGuideScrewHole(x)
-// {
-//     translate([x,0,0]) rotate([90,0,0]) tcy([0,0,-50], d=1.8, h=100);
-// }
 
 module clip(d=0)
 {
