@@ -4,6 +4,7 @@ use <../OpenSCADdesigns/torus.scad>
 
 makeMount1 = false;
 makeMount2 = false;
+makeMount2a = false;
 makeDrillGuide2 = false;
 
 mastTubeHoleDia = 41 + 6; // #3 mast section
@@ -152,6 +153,53 @@ module mount2()
     mount2ScrewHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
 }
 
+module mount2a()
+{
+    difference()
+    {
+        hull()
+        {
+            exterior1();
+            secondMountXform() exterior1();
+
+            bungieBump();
+            secondMountXform() mirror([1,0,0]) bungieBump();
+        }
+        interior1();
+        secondMountXform()  interior1();
+
+        mount2ScrewHoleXform() screwHole();
+
+        bungieHole();
+        secondMountXform() mirror([1,0,0]) bungieHole();
+
+        twoByFour();
+    }
+
+    // Screw recess sacrificial layer:
+    mount2ScrewHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
+}
+
+bungieHoleDia = 3.7;
+bungieBumpDia = bungieHoleDia + wallFittingCZ + 12;
+echo(str("bungieBumpDia = ", bungieBumpDia));
+
+bungieHoleTranslation = [35, 23, 0];
+
+module bungieBump()
+{
+    tsccde(bungieHoleTranslation, bungieBumpDia);
+}
+
+module bungieHole()
+{
+    translate(bungieHoleTranslation)
+    {
+        tcy([0,0,-100], d=bungieHoleDia, h=200);
+        translate([0,0,-10+bungieHoleDia/2+3.4]) cylinder(d1=20, d2=0, h=10);
+    }
+}
+
 module twoByFour()
 {
     tcu([-200, -400, twoByfourOffsetZ], 400);
@@ -230,6 +278,9 @@ module clip(d=0)
 
     // Trim +X:
     // tcu([0, -200, -200], 400);
+
+    // Trim at bungie hole:
+    // tcu([-200, bungieHoleTranslation.y-d, -200], 400);
 }
 
 if(developmentRender)
@@ -247,13 +298,18 @@ if(developmentRender)
     // // 2x4:
     // displayGhost() twoByFourGhost(400, -10);
 
-    display() mount2DrillGuide();
-    displayGhost() translate([-130,0,0]) mount2();
+    display() mount2a();
+    displayGhost() twoByFourGhost(500, -130);
     displayGhost() translate([130,0,0]) mount1();
+    displayGhost() translate([-190,0,0]) mount2();
+
+    // display() mount2DrillGuide();
+    // displayGhost() translate([-130,0,0]) mount2();
+    // displayGhost() translate([130,0,0]) mount1();
     // Mast:
     // displayGhost() tcy([0,32.3,-100], d=41, h=200);
     // 2x4:
-    displayGhost() twoByFourGhost(500, -130);
+    // displayGhost() twoByFourGhost(500, -130);
 }
 else
 {
