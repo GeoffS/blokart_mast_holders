@@ -14,6 +14,8 @@ wallFittingCZ = 3;
 
 extDia = 25;
 
+ext2Dia = mastTubeHoleDia + 20;
+
 twoByFourNarrow = 1.5 * 25.4;
 overlapWith2By4 = twoByFourNarrow - 2;
 echo(str("overlapWith2By4 = ", overlapWith2By4));
@@ -30,6 +32,9 @@ interior_cz = wallFittingCZ + interior_dh;
 tubeCtr2X = 0;
 tubeCtr2Y = mastTubeHoleDia/2 + 6;
 echo(str("tubeCtr2X = ", tubeCtr2X));
+
+mountMaxY = tubeCtr2Y + ext2Dia/2;
+echo(str("mountMaxY = ", mountMaxY));
 
 module exterior1()
 {
@@ -53,7 +58,7 @@ module exterior1()
             d = extDia
         );
 
-        ext2Dia = mastTubeHoleDia + 20;
+        // ext2Dia = mastTubeHoleDia + 20;
         tsccde(
             t = [tubeCtr2X, tubeCtr2Y, 0],
             d = ext2Dia
@@ -176,6 +181,8 @@ module mount2a()
         twoByFour();
     }
 
+    bungieHook();
+
     // Screw recess sacrificial layer:
     mount2ScrewHoleXform() tcy([0, 0, screwHeadClearanceHoleZ], d=6, h=layerThickness);
 }
@@ -185,6 +192,38 @@ bungieBumpDia = bungieHoleDia + wallFittingCZ + 12;
 echo(str("bungieBumpDia = ", bungieBumpDia));
 
 bungieHoleTranslation = [35, 23, 0];
+
+module bungieHook()
+{
+    bungieHookOD = 10;
+    bungieHookOffsetY = 9;
+
+    bungieHookBaseZ = wallFitttingZ/2 - 2;
+    echo(str("bungieHookBaseZ = ", bungieHookBaseZ));
+
+    bungieHookZ = bungieHookBaseZ + wallFittingCZ + 6 ;
+
+    translate([-secondMountOffsetX/2, mountMaxY, 0])
+    {
+        translate([0, bungieHookOffsetY, 0]) simpleChamferedCylinderDoubleEnded(
+            d=bungieHookOD, 
+            h=bungieHookZ, 
+            cz=wallFittingCZ);
+
+            hull()
+            {
+                doubleX() translate([10, -bungieHookOD/2, 0]) simpleChamferedCylinderDoubleEnded(
+                    d=bungieHookOD, 
+                    h=bungieHookBaseZ, 
+                    cz=wallFittingCZ);
+
+                translate([0,bungieHookOffsetY,0]) simpleChamferedCylinderDoubleEnded(
+                    d=bungieHookOD, 
+                    h=bungieHookBaseZ, 
+                    cz=wallFittingCZ);
+            }
+    }
+}
 
 module bungieBump()
 {
