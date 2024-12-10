@@ -288,8 +288,7 @@ module bungieHole()
 
 module bungieBumpXform()
 {
-    // translate(tubeCtr) rotate([0,0,102]) translate([mountMaxY/2+bungieHoleDia/2-0.8, 0, 0]) children();
-    mastTubeRadialXform(r=mountMaxY/2+bungieHoleDia/2-0.8, a=102) children();
+    mastTubeRadialXform(r=mountMaxY/2+bungieHoleDia/2-0.8, a=100) children();
 }
 
 module mastTubeRadialXform(r, a)
