@@ -252,22 +252,6 @@ module bungieHook()
                         bungieHookBaseCyl(17, -30, z=wallFitttingZ);
                     }
                 }
-
-                // hull()
-                // {
-                //     // #doubleX() translate([bungieHookBaseOffset1X, bungieHookBaseOffsetY, 0]) simpleChamferedCylinderDoubleEnded(
-                //     //     d=bungieHookOD, 
-                //     //     h=bungieHookBaseZ, 
-                //     //     cz=wallFittingCZ);
-                    
-                //     #doubleX() bungieHookBaseCyl(8, -10);
-                //     #doubleX() bungieHookBaseCyl(8+bungieHoleDia, -10);
-
-                //     translate([0,bungieHookOffsetY,0]) simpleChamferedCylinderDoubleEnded(
-                //         d=bungieHookOD, 
-                //         h=bungieHookBaseZ, 
-                //         cz=wallFittingCZ);
-                // }
             }
         }
 
