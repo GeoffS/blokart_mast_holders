@@ -36,6 +36,8 @@ echo(str("tubeCtr2X = ", tubeCtr2X));
 mountMaxY = tubeCtr2Y + ext2Dia/2;
 echo(str("mountMaxY = ", mountMaxY));
 
+tubeCtr = [tubeCtr2X, tubeCtr2Y, 0];
+
 module exterior1()
 {
     hull()
@@ -58,9 +60,8 @@ module exterior1()
             d = extDia
         );
 
-        // ext2Dia = mastTubeHoleDia + 20;
         tsccde(
-            t = [tubeCtr2X, tubeCtr2Y, 0],
+            t = tubeCtr,
             d = ext2Dia
         );
     }
@@ -164,7 +165,7 @@ module mount2a()
     {
         hull()
         {
-            #exterior1();
+            exterior1();
             secondMountXform() exterior1();
         }
         mount2aSubtration();
@@ -190,7 +191,7 @@ bungieHoleDia = 3.7;
 bungieBumpDia = bungieHoleDia + wallFittingCZ + 12;
 echo(str("bungieBumpDia = ", bungieBumpDia));
 
-bungieHoleTranslation = [0, mountMaxY+bungieHoleDia/2, 0];
+// bungieHoleTranslation = [0, mountMaxY+bungieHoleDia/2, 0];
 
 module bungieHoles()
 {
@@ -214,7 +215,7 @@ module bungieHook()
 {
     bungieHookOD = 10;
     bungieHookOffsetY = 9;
-    bungieHookBaseOffsetX = 11;
+    bungieHookBaseOffsetX = 10;
 
     bungieHookBaseZ = wallFitttingZ/2 - 2;
     echo(str("bungieHookBaseZ = ", bungieHookBaseZ));
@@ -248,17 +249,23 @@ module bungieBump()
     hull()
     {
         exterior1();
-        tsccde(bungieHoleTranslation, bungieBumpDia);
+        bungieBumpXform() tsccde([0,0,0], bungieBumpDia);
     }
 }
 
 module bungieHole()
 {
-    translate(bungieHoleTranslation)
+    bungieBumpXform()
     {
         tcy([0,0,-100], d=bungieHoleDia, h=200);
         translate([0,0,-10+bungieHoleDia/2+3.4]) cylinder(d1=20, d2=0, h=10);
     }
+}
+
+module bungieBumpXform()
+{
+    // translate(bungieHoleTranslation) children();
+    translate(tubeCtr) rotate([0,0,102]) translate([mountMaxY/2+bungieHoleDia/2-0.8, 0, 0]) children();
 }
 
 module twoByFour()
