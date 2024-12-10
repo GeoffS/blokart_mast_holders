@@ -164,21 +164,20 @@ module mount2a()
     {
         hull()
         {
-            exterior1();
+            #exterior1();
             secondMountXform() exterior1();
+        }
+        mount2aSubtration();
+    }
 
+    difference()
+    {
+        union()
+        {
             bungieBump();
             secondMountXform() mirror([1,0,0]) bungieBump();
         }
-        interior1();
-        secondMountXform()  interior1();
-
-        mount2ScrewHoleXform() screwHole();
-
-        bungieHole();
-        secondMountXform() mirror([1,0,0]) bungieHole();
-
-        twoByFour();
+        mount2aSubtration();
     }
 
     bungieHook();
@@ -191,12 +190,31 @@ bungieHoleDia = 3.7;
 bungieBumpDia = bungieHoleDia + wallFittingCZ + 12;
 echo(str("bungieBumpDia = ", bungieBumpDia));
 
-bungieHoleTranslation = [35, 23, 0];
+bungieHoleTranslation = [0, mountMaxY+bungieHoleDia/2, 0];
+
+module bungieHoles()
+{
+    bungieHole();
+    secondMountXform() mirror([1,0,0]) bungieHole();
+}
+
+module mount2aSubtration()
+{
+    interior1();
+    secondMountXform()  interior1();
+
+    mount2ScrewHoleXform() screwHole();
+
+    bungieHoles();
+
+    twoByFour();
+}
 
 module bungieHook()
 {
     bungieHookOD = 10;
     bungieHookOffsetY = 9;
+    bungieHookBaseOffsetX = 11;
 
     bungieHookBaseZ = wallFitttingZ/2 - 2;
     echo(str("bungieHookBaseZ = ", bungieHookBaseZ));
@@ -212,7 +230,7 @@ module bungieHook()
 
             hull()
             {
-                doubleX() translate([10, -bungieHookOD/2, 0]) simpleChamferedCylinderDoubleEnded(
+                doubleX() translate([bungieHookBaseOffsetX, -bungieHookOD/2, 0]) simpleChamferedCylinderDoubleEnded(
                     d=bungieHookOD, 
                     h=bungieHookBaseZ, 
                     cz=wallFittingCZ);
@@ -227,7 +245,11 @@ module bungieHook()
 
 module bungieBump()
 {
-    tsccde(bungieHoleTranslation, bungieBumpDia);
+    hull()
+    {
+        exterior1();
+        tsccde(bungieHoleTranslation, bungieBumpDia);
+    }
 }
 
 module bungieHole()
