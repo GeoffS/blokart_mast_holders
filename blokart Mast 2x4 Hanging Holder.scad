@@ -5,6 +5,7 @@ use <../OpenSCADdesigns/torus.scad>
 makeMount1 = false;
 makeMount2 = false;
 makeMount2a = false;
+makeMount2aBungieHookModifier = false;
 makeDrillGuide2 = false;
 
 mastTubeHoleDia = 41 + 6; // #3 mast section
@@ -209,14 +210,16 @@ module mount2aSubtration()
     twoByFour();
 }
 
+bungieHookOffsetY = 2.5;
 bungieHookOD = 10;
+
+baseOffset1Y = bungieHookOffsetY - bungieHookOD - bungieHoleDia;
 
 bungieHookBaseZ = wallFitttingZ/2 - 2;
 echo(str("bungieHookBaseZ = ", bungieHookBaseZ));
 
 module bungieHook()
 {
-    bungieHookOffsetY = 2.5;
 
     bungieHookBaseOffset1X = 25;
     bungieHookBaseOffset2X = 25;
@@ -232,7 +235,6 @@ module bungieHook()
             bungieHookBaseCyl(0, bungieHookOffsetY, z=bungieHookZ);
 
             // The base:
-            baseOffset1Y = bungieHookOffsetY - bungieHookOD - bungieHoleDia;
             union()
             {
                 hull()
@@ -245,14 +247,25 @@ module bungieHook()
                 {
                     doubleX() 
                     {
-                        bungieHookBaseCyl(17, baseOffset1Y, z=wallFitttingZ);
-                        bungieHookBaseCyl(17, -30, z=wallFitttingZ);
+                        // MAGIC NUMBER:
+                        dx = 12.5;
+                        bungieHookBaseCyl(dx, baseOffset1Y, z=wallFitttingZ);
+                        bungieHookBaseCyl(dx, -30, z=wallFitttingZ);
                     }
                 }
             }
         }
 
         mount2aSubtration();
+    }
+}
+
+module mount2aBungieHookModifier()
+{
+    difference()
+    {
+        bungieHook();
+        tcu([-200, -400+(mountMaxY+baseOffset1Y), -200], 400);
     }
 }
 
@@ -391,10 +404,13 @@ if(developmentRender)
     // // 2x4:
     // displayGhost() twoByFourGhost(400, -10);
 
-    display() mount2a();
-    displayGhost() twoByFourGhost(500, -130);
-    displayGhost() translate([130,0,0]) mount1();
-    displayGhost() translate([-190,0,0]) mount2();
+    display() mount2aBungieHookModifier();
+    displayGhost() mount2a();
+
+    // display() mount2a();
+    // displayGhost() twoByFourGhost(500, -130);
+    // displayGhost() translate([130,0,0]) mount1();
+    // displayGhost() translate([-190,0,0]) mount2();
 
     // display() mount2DrillGuide();
     // displayGhost() translate([-130,0,0]) mount2();
@@ -409,6 +425,7 @@ else
     if(makeMount1) rotate([0,0,180]) mount1();
     if(makeMount2) rotate([0,0,180]) mount2();
     if(makeMount2a) rotate([0,0,180]) mount2a();
+    if(makeMount2aBungieHookModifier) mount2aBungieHookModifier();
 	if(makeDrillGuide2) mount2DrillGuide();
 }
 
