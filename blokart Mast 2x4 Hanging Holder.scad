@@ -14,7 +14,7 @@ wallFittingCZ = 3;
 
 extDia = 25;
 
-ext2Dia = mastTubeHoleDia + 20;
+ext2Dia = mastTubeHoleDia + 22;
 
 twoByFourNarrow = 1.5 * 25.4;
 overlapWith2By4 = twoByFourNarrow - 2;
@@ -229,10 +229,7 @@ module bungieHook()
         translate([-secondMountOffsetX/2, mountMaxY, 0])
         {
             // The "hook":
-            translate([0, bungieHookOffsetY, 0]) simpleChamferedCylinderDoubleEnded(
-                d=bungieHookOD, 
-                h=bungieHookZ, 
-                cz=wallFittingCZ);
+            bungieHookBaseCyl(0, bungieHookOffsetY, z=bungieHookZ);
 
             // The base:
             baseOffset1Y = bungieHookOffsetY - bungieHookOD - bungieHoleDia;
