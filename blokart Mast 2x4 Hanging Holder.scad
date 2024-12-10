@@ -191,8 +191,6 @@ bungieHoleDia = 3.7;
 bungieBumpDia = bungieHoleDia + wallFittingCZ + 12;
 echo(str("bungieBumpDia = ", bungieBumpDia));
 
-// bungieHoleTranslation = [0, mountMaxY+bungieHoleDia/2, 0];
-
 module bungieHoles()
 {
     bungieHole();
@@ -264,7 +262,6 @@ module bungieHole()
 
 module bungieBumpXform()
 {
-    // translate(bungieHoleTranslation) children();
     translate(tubeCtr) rotate([0,0,102]) translate([mountMaxY/2+bungieHoleDia/2-0.8, 0, 0]) children();
 }
 
