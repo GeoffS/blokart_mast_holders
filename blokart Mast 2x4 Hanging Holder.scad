@@ -163,7 +163,7 @@ module mount2a()
 {
     difference()
     {
-        hull()
+        union()
         {
             exterior1();
             secondMountXform() exterior1();
@@ -209,37 +209,79 @@ module mount2aSubtration()
     twoByFour();
 }
 
+bungieHookOD = 10;
+
+bungieHookBaseZ = wallFitttingZ/2 - 2;
+echo(str("bungieHookBaseZ = ", bungieHookBaseZ));
+
 module bungieHook()
 {
-    bungieHookOD = 10;
-    bungieHookOffsetY = 9;
-    bungieHookBaseOffsetX = 10;
+    bungieHookOffsetY = 2.5;
 
-    bungieHookBaseZ = wallFitttingZ/2 - 2;
-    echo(str("bungieHookBaseZ = ", bungieHookBaseZ));
+    bungieHookBaseOffset1X = 25;
+    bungieHookBaseOffset2X = 25;
+    bungieHookBaseOffsetY = -30;
 
     bungieHookZ = bungieHookBaseZ + wallFittingCZ + 6 ;
 
-    translate([-secondMountOffsetX/2, mountMaxY, 0])
+    difference()
     {
-        translate([0, bungieHookOffsetY, 0]) simpleChamferedCylinderDoubleEnded(
-            d=bungieHookOD, 
-            h=bungieHookZ, 
-            cz=wallFittingCZ);
+        translate([-secondMountOffsetX/2, mountMaxY, 0])
+        {
+            // The "hook":
+            translate([0, bungieHookOffsetY, 0]) simpleChamferedCylinderDoubleEnded(
+                d=bungieHookOD, 
+                h=bungieHookZ, 
+                cz=wallFittingCZ);
 
-            hull()
+            // The base:
+            baseOffset1Y = bungieHookOffsetY - bungieHookOD - bungieHoleDia;
+            union()
             {
-                doubleX() translate([bungieHookBaseOffsetX, -bungieHookOD/2, 0]) simpleChamferedCylinderDoubleEnded(
-                    d=bungieHookOD, 
-                    h=bungieHookBaseZ, 
-                    cz=wallFittingCZ);
+                hull()
+                {
+                    doubleX() bungieHookBaseCyl(6, baseOffset1Y);
+                    bungieHookBaseCyl(0, bungieHookOffsetY);
+                }
 
-                translate([0,bungieHookOffsetY,0]) simpleChamferedCylinderDoubleEnded(
-                    d=bungieHookOD, 
-                    h=bungieHookBaseZ, 
-                    cz=wallFittingCZ);
+                hull()
+                {
+                    doubleX() 
+                    {
+                        bungieHookBaseCyl(17, baseOffset1Y, z=wallFitttingZ);
+                        bungieHookBaseCyl(17, -30, z=wallFitttingZ);
+                    }
+                }
+
+                // hull()
+                // {
+                //     // #doubleX() translate([bungieHookBaseOffset1X, bungieHookBaseOffsetY, 0]) simpleChamferedCylinderDoubleEnded(
+                //     //     d=bungieHookOD, 
+                //     //     h=bungieHookBaseZ, 
+                //     //     cz=wallFittingCZ);
+                    
+                //     #doubleX() bungieHookBaseCyl(8, -10);
+                //     #doubleX() bungieHookBaseCyl(8+bungieHoleDia, -10);
+
+                //     translate([0,bungieHookOffsetY,0]) simpleChamferedCylinderDoubleEnded(
+                //         d=bungieHookOD, 
+                //         h=bungieHookBaseZ, 
+                //         cz=wallFittingCZ);
+                // }
             }
+        }
+
+        mount2aSubtration();
     }
+}
+
+module bungieHookBaseCyl(offsetX, offsetY, z=bungieHookBaseZ)
+{
+    translate([offsetX, offsetY, 0]) 
+        simpleChamferedCylinderDoubleEnded(
+            d=bungieHookOD, 
+            h=z, 
+            cz=wallFittingCZ);
 }
 
 module bungieBump()
@@ -262,7 +304,13 @@ module bungieHole()
 
 module bungieBumpXform()
 {
-    translate(tubeCtr) rotate([0,0,102]) translate([mountMaxY/2+bungieHoleDia/2-0.8, 0, 0]) children();
+    // translate(tubeCtr) rotate([0,0,102]) translate([mountMaxY/2+bungieHoleDia/2-0.8, 0, 0]) children();
+    mastTubeRadialXform(r=mountMaxY/2+bungieHoleDia/2-0.8, a=102) children();
+}
+
+module mastTubeRadialXform(r, a)
+{
+    translate(tubeCtr) rotate([0,0,a]) translate([r, 0, 0]) children();
 }
 
 module twoByFour()
